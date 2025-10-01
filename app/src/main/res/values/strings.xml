@@ -2,4 +2,13 @@
     <string name="app_name">LifeSync</string>
     <string name="dashboard">Dashboard</string>
     <string name="track_reflect_grow">Track . Reflect . Grow</string>
+    <string name="this_is_habit_tracker">This is Habit Tracker</string>
+    <string name="this_is_expense_tracker">This is Expense Tracker</string>
+    <string name="to_do_list">To - Do List</string>
+    <string name="this_is_journal">This is Journal</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="to_do">To-Do</string>
+    <string name="habit">Habit</string>
+    <string name="expends">Expends</string>
+    <string name="journal">Journal</string>
 </resources>

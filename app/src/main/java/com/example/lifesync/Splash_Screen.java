@@ -8,7 +8,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Splash_Screen extends AppCompatActivity {
-
     private static final int SPLASH_TIME = 2500;
 
     @Override

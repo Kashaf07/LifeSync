@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/dashboard"/>
+    <item
+        android:id="@+id/nav_todo"
+        android:icon="@drawable/ic_tasks"
+        android:title="@string/to_do" />
+    <item
+        android:id="@+id/nav_habits"
+        android:icon="@drawable/ic_habits"
+        android:title="@string/habit"/>
+    <item
+        android:id="@+id/nav_moods"
+        android:icon="@drawable/ic_expense"
+        android:title="@string/expends" />
+    <item
+        android:id="@+id/nav_journal"
+        android:icon="@drawable/ic_journal"
+        android:title="@string/journal" />
+</menu>
