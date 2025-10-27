@@ -2,8 +2,10 @@ package com.example.lifesync;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -15,27 +17,37 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        // 🧩 FIX: Remove extra space below bottom navigation
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNavigationView, (view, insets) -> {
+            // Disable Android's automatic bottom inset padding
+            view.setPadding(0, 0, 0, 0);
+            return insets;
+        });
+
         // Load the Dashboard fragment by default
         if (savedInstanceState == null) {
             loadFragment(new Dashboard_Fragment());
         }
 
+        // Handle navigation item clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            Fragment selectedFragment = null;
+
             if (id == R.id.nav_dashboard) {
-                loadFragment(new Dashboard_Fragment());
-                return true;
+                selectedFragment = new Dashboard_Fragment();
             } else if (id == R.id.nav_journal) {
-                loadFragment(new Journal_Fragment());
-                return true;
+                selectedFragment = new Journal_Fragment();
             } else if (id == R.id.nav_habits) {
-                loadFragment(new Habit_Fragment());
-                return true;
+                selectedFragment = new Habit_Fragment();
             } else if (id == R.id.nav_expense) {
-                loadFragment(new Expense_Fragment());
-                return true;
+                selectedFragment = new Expense_Fragment();
             } else if (id == R.id.nav_todo) {
-                loadFragment(new To_Do_Fragment());
+                selectedFragment = new To_Do_Fragment();
+            }
+
+            if (selectedFragment != null) {
+                loadFragment(selectedFragment);
                 return true;
             }
             return false;
@@ -49,4 +61,3 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 }
-
