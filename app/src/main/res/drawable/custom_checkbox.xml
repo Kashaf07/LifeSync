@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Checked state -->
+    <item android:state_checked="true" android:drawable="@drawable/ic_checkbox" />
+
+    <!-- Unchecked state -->
+    <item>
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp" android:color="#FFB6C1" />
+            <corners android:radius="4dp" />
+            <solid android:color="@android:color/transparent" />
+            <size android:width="20dp" android:height="20dp" />
+        </shape>
+    </item>
+</selector>

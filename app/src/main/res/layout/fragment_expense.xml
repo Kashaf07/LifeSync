@@ -40,7 +40,7 @@
                 android:contentDescription="Profile"
                 android:scaleType="centerInside"
                 android:padding="10dp"
-                android:tint="#2E4E3F" />
+                app:tint="#2E4E3F" />
         </LinearLayout>
 
         <!-- Current Balance Card -->

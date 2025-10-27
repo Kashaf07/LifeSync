@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/color/chip_bg_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- When chip is checked/selected -->
+    <item android:color="#FFB6C1" android:state_checked="true"/>
+    <item android:color="#FFB6C1" android:state_selected="true"/>
+
+    <!-- Default state (unchecked) -->
+    <item android:color="@android:color/white"/>
+</selector>
