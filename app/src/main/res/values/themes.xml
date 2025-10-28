@@ -3,7 +3,22 @@
     <style name="Base.Theme.LifeSync" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorControlActivated">@null</item>
+        <item name="colorControlNormal">@null</item>
+        <item name="android:buttonTint">@null</item>
+
     </style>
+    <style name="PinkCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/custom_checkbox</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="NoTintCheckBox" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlNormal">@null</item>
+        <item name="colorControlActivated">@null</item>
+        <item name="android:buttonTint">@null</item>
+    </style>
+
 
     <style name="Theme.LifeSync" parent="Base.Theme.LifeSync" />
 </resources>

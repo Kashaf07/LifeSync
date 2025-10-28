@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/item_week_day.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/bg_day_normal"
+    android:padding="10dp"
+    android:layout_marginEnd="8dp"
+    android:elevation="2dp">
+
+    <!-- Day Name (Mon, Tue, etc.) -->
+    <TextView
+        android:id="@+id/tvDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mon"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:textStyle="bold"/>
+
+    <!-- Date Number (12, 13, etc.) -->
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Show number of tasks instead of just a dot -->
+    <TextView
+        android:id="@+id/tvTaskCount"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:text="3"
+        android:textSize="10sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_count_badge"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Task Title -->
+        <EditText
+            android:id="@+id/etTaskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task Title ✨"
+            android:background="@drawable/bg_edittext"
+            android:padding="12dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:inputType="text"/>
+
+        <!-- Priority Selector -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:gravity="center_horizontal">
+
+            <RadioGroup
+                android:id="@+id/rgPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="High"
+                    android:button="@null"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_priority_high"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="8dp"/>
+
+                <RadioButton
+                    android:id="@+id/rbMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium"
+                    android:button="@null"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_priority_medium"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="8dp"/>
+
+                <RadioButton
+                    android:id="@+id/rbLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Low"
+                    android:button="@null"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_priority_low"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="8dp"/>
+
+                <RadioButton
+                    android:id="@+id/rbNone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="None"
+                    android:button="@null"
+                    android:padding="8dp"
+                    android:background="@drawable/bg_priority_none"
+                    android:textColor="@color/black"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- Deadline row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/btnSelectDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_button"
+                android:text="Select Deadline"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/ivDescToggle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_paragraph"
+                android:contentDescription="Add Description"
+                android:padding="8dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </LinearLayout>
+
+        <!-- Hidden Description -->
+        <EditText
+            android:id="@+id/etTaskDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description (optional)"
+            android:background="@drawable/bg_edittext"
+            android:padding="12dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:inputType="textMultiLine"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSaveTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Task"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_button_gradient"
+            android:textColor="@color/white"
+            android:padding="12dp"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+</ScrollView>

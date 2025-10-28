@@ -3,6 +3,7 @@ package com.example.lifesync;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // ✅ Make layout fully use the screen area safely (handles gesture navigation)
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         // 🧩 FIX: Remove extra space below bottom navigation
         ViewCompat.setOnApplyWindowInsetsListener(bottomNavigationView, (view, insets) -> {
