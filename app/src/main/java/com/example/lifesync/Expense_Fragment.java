@@ -117,9 +117,9 @@ public class Expense_Fragment extends Fragment {
     private void updateStats() {
         if (dbHelper != null && tvBalance != null && tvIncome != null && tvExpenses != null) {
             Map<String, Double> stats = dbHelper.getStats();
-            tvBalance.setText(String.format("Rs%.2f", stats.get("balance")));
-            tvIncome.setText(String.format("Rs%.2f", stats.get("income")));
-            tvExpenses.setText(String.format("Rs%.2f", stats.get("expenses")));
+            tvBalance.setText(String.format("₹%.2f", stats.get("balance")));
+            tvIncome.setText(String.format("₹%.2f", stats.get("income")));
+            tvExpenses.setText(String.format("₹%.2f", stats.get("expenses")));
         }
     }
 
