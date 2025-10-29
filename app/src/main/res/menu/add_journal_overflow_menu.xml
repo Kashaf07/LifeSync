@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_toggle_favorite"
+        android:title="@string/favorite"
+        android:checkable="true" />
+    <item
+        android:id="@+id/action_toggle_draft"
+        android:title="@string/save_as_draft"
+        android:checkable="true" />
+    <item
+        android:id="@+id/action_toggle_private"
+        android:title="@string/make_this_entry_private"
+        android:checkable="true" />
+</menu>

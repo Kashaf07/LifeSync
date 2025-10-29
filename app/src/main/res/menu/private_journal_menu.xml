@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Group for layout options specific to the private journal view -->
+    <group
+        android:id="@+id/private_layout_options"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_grid_layout_private"
+            android:title="Grid View"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_linear_layout_private"
+            android:title="List View"
+            app:showAsAction="never" />
+    </group>
+
+</menu>
