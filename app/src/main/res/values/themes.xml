@@ -5,7 +5,6 @@
     Styles from the first file (LifeSync)
     ================================================
     -->
-
     <!-- Base application theme. -->
     <style name="Base.Theme.LifeSync" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->

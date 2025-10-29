@@ -9,7 +9,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="to_do">To-Do</string>
     <string name="habit">Habit</string>
-    <string name="expends">Expends</string>
+    <string name="expends">Expense</string>
     <string name="journal">Journal</string>
     <string name="add_task">Add Task</string>
     <string name="tap_the_button_to_add_your_first_task">Tap the + button to add your first task</string>
@@ -33,6 +33,15 @@
     <string name="_12_01_2025">12/01/2025</string>
     <string name="high">High</string>
     <string name="edit_task">Edit Task</string>
+    <string name="task_title_">Task Title ✨</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
+    <string name="none">None</string>
+    <string name="select_deadline">Select Deadline</string>
+    <string name="add_description">Add Description</string>
+    <string name="description_optional">Description (optional)</string>
+    <string name="save_task">Save Task</string>
+    <string name="swipe_left_to_delete_task">💡 Swipe left to delete task</string>
 
 
     <string name="title">Title</string>

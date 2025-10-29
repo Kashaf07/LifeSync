@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<style name="BackButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-    <item name="android:textColor">#2E4E3F</item>
-</style>
+
+    <!-- ✅ App Theme with Transparent Navigation and Status Bars -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Make navigation bar and status bar transparent -->
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <!-- Ensure edge-to-edge content -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <!-- Optional for rounded ripple and modern look -->
+        <item name="android:colorControlHighlight">#1FFFFFFF</item>
+    </style>
+
+    <!-- Keep your custom button style -->
+    <style name="BackButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">#2E4E3F</item>
+    </style>
+
 </resources>

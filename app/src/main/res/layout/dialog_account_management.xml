@@ -32,7 +32,6 @@
         android:visibility="gone" />
 
     <!-- Create Account Button -->
-    <!-- Create Account Button -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreateAccount"
         android:layout_width="match_parent"
