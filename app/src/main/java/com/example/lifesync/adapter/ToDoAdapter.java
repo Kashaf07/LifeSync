@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -192,6 +193,13 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.TaskViewHolder
                     break;
             }
         }
+        // 🧩 Apply correct visuals for selected priority
+        refreshPrioritySelection(rgPriority, rgPriority.getCheckedRadioButtonId());
+
+        // 🧩 Update visuals when user selects a new one
+        rgPriority.setOnCheckedChangeListener((group, checkedId) -> {
+            refreshPrioritySelection(group, checkedId);
+        });
 
         final String[] selectedDeadline = {model.getDate() != null ? model.getDate() : ""};
         final Calendar calendar = Calendar.getInstance();
@@ -264,6 +272,30 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.TaskViewHolder
             Toast.makeText(holder.itemView.getContext(), "Task updated! ✅", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
+    }
+    private void refreshPrioritySelection(RadioGroup rgPriority, int checkedId) {
+        for (int i = 0; i < rgPriority.getChildCount(); i++) {
+            View child = rgPriority.getChildAt(i);
+            if (child instanceof RadioButton) {
+                RadioButton rb = (RadioButton) child;
+                if (rb.getId() == checkedId) {
+                    rb.setBackgroundResource(R.drawable.bg_priority_selected);
+                    rb.setScaleX(1.05f);
+                    rb.setScaleY(1.05f);
+                } else {
+                    rb.setScaleX(1.0f);
+                    rb.setScaleY(1.0f);
+                    if (rb.getId() == R.id.rbHigh)
+                        rb.setBackgroundResource(R.drawable.bg_priority_high);
+                    else if (rb.getId() == R.id.rbMedium)
+                        rb.setBackgroundResource(R.drawable.bg_priority_medium);
+                    else if (rb.getId() == R.id.rbLow)
+                        rb.setBackgroundResource(R.drawable.bg_priority_low);
+                    else
+                        rb.setBackgroundResource(R.drawable.bg_priority_none);
+                }
+            }
+        }
     }
 
     @Override

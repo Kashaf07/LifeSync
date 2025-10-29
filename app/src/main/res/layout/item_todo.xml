@@ -49,7 +49,7 @@
                 android:id="@+id/taskTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Task Title"
+                android:text="@string/task_title"
                 android:textSize="16sp"
                 android:textColor="#333333"
                 android:textStyle="bold"
@@ -61,7 +61,7 @@
                 android:id="@+id/taskDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Task description"
+                android:text="@string/task_description"
                 android:textSize="13sp"
                 android:textColor="#666666"
                 android:layout_marginTop="4dp"
@@ -92,7 +92,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📅"
+                        android:text="@string/calendar_icon"
                         android:textSize="10sp"
                         android:layout_marginEnd="4dp"/>
 
@@ -100,7 +100,7 @@
                         android:id="@+id/taskDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12/01/2025"
+                        android:text="@string/_12_01_2025"
                         android:textSize="11sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -110,7 +110,7 @@
                     android:id="@+id/priorityBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="High"
+                    android:text="@string/high"
                     android:textSize="11sp"
                     android:textColor="@android:color/white"
                     android:background="@drawable/bg_priority_badge"
@@ -130,7 +130,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
             android:padding="4dp"
-            android:contentDescription="Edit Task"
+            android:contentDescription="@string/edit_task"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:tint="#999999" />
     </LinearLayout>
