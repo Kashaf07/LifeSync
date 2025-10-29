@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="BackButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">#2E4E3F</item>
-    </style>
-
+<style name="BackButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+    <item name="android:textColor">#2E4E3F</item>
+</style>
 </resources>
