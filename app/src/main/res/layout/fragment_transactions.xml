@@ -51,14 +51,15 @@
             android:id="@+id/btnDaily"
             android:layout_width="0dp"
             android:layout_height="44dp"
+            android:layout_margin="2dp"
             android:layout_weight="1"
-            android:text="Daily"
-            android:textSize="14sp"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
             android:background="@drawable/rounded_button"
             android:backgroundTint="#4CAF50"
-            android:layout_margin="2dp" />
+            android:text="Daily"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnMonthly"
@@ -67,23 +68,25 @@
             android:layout_weight="1"
             android:text="Monthly"
             android:textSize="14sp"
+            android:textAllCaps="false"
             android:textColor="#757575"
             android:textStyle="bold"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="#F5F5F5"
+            android:backgroundTint="#FFFFFF"
             android:layout_margin="2dp" />
 
         <Button
             android:id="@+id/btnYearly"
             android:layout_width="0dp"
             android:layout_height="44dp"
+            android:textAllCaps="false"
             android:layout_weight="1"
             android:text="Yearly"
             android:textSize="14sp"
             android:textColor="#757575"
             android:textStyle="bold"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="#F5F5F5"
+            android:backgroundTint="#FFFFFF"
             android:layout_margin="2dp" />
     </LinearLayout>
 

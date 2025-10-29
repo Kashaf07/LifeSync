@@ -7,6 +7,9 @@
         <item name="colorControlNormal">@null</item>
         <item name="android:buttonTint">@null</item>
 
+        <!-- Disable all caps for buttons -->
+        <item name="textAllCaps">false</item>
+
     </style>
     <style name="PinkCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:button">@drawable/custom_checkbox</item>
