@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/dialog_bg_rounded">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif-medium"
+            android:text="Select Time"
+            android:textColor="#1A1A1A"
+            android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_close"
+            app:tint="#1A1A1A"
+            android:contentDescription="Close" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <NumberPicker
+            android:id="@+id/hourPicker"
+            android:layout_width="60dp"
+            android:layout_height="180dp"
+            android:textColorPrimary="#1A1A1A" android:textColor="#1A1A1A"
+            android:textColorSecondary="#1A1A1A" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:text=":"
+            android:textColor="#1A1A1A"
+            android:textSize="32sp" />
+
+        <NumberPicker
+            android:id="@+id/minutePicker"
+            android:layout_width="60dp"
+            android:layout_height="180dp"
+            android:textColorPrimary="#1A1A1A" android:textColor="#1A1A1A"
+            android:textColorSecondary="#1A1A1A" />
+
+        <NumberPicker
+            android:id="@+id/periodPicker"
+            android:layout_width="70dp"
+            android:layout_height="180dp"
+            android:layout_marginStart="8dp"
+            android:textColorPrimary="#1A1A1A" android:textColor="#1A1A1A"
+            android:textColorSecondary="#1A1A1A" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnConfirmTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#5B5F97"
+        android:fontFamily="sans-serif-medium"
+        android:text="Confirm"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+</LinearLayout>
