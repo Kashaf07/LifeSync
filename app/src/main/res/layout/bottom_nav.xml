@@ -12,4 +12,5 @@
     app:labelVisibilityMode="labeled"
     app:itemRippleColor="@color/purple_200"
     app:itemBackground="@drawable/nav_item_bg"
-    android:elevation="10dp" />
+    android:elevation="10dp"
+    />
