@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_hidden_folder"
+        android:title="Hidden Folder"
+        app:showAsAction="never" />
+
+    <!-- Group for layout options -->
+    <group
+        android:id="@+id/layout_options"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_grid_layout"
+            android:title="Grid View"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_linear_layout"
+            android:title="List View"
+            app:showAsAction="never" />
+    </group>
+
+</menu>

@@ -15,9 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeSync">
         <activity
-            android:name=".BootReciever"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true" />
         <activity
@@ -25,10 +22,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Notification Receiver -->
+        </activity>
+        <!-- Notification Receiver -->
         <receiver
             android:name=".receiver.TaskNotificationReceiver"
             android:enabled="true"

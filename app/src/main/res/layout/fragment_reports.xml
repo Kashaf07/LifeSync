@@ -50,12 +50,13 @@
             android:backgroundTint="#FFFFFF"
             android:padding="4dp">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDaily"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:text="Daily"
+                android:textAllCaps="false"
                 android:textSize="14sp"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
@@ -63,12 +64,13 @@
                 android:backgroundTint="#4CAF50"
                 android:layout_margin="2dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnMonthly"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:text="Monthly"
+                android:textAllCaps="false"
                 android:textSize="14sp"
                 android:textColor="#757575"
                 android:textStyle="bold"
@@ -76,12 +78,13 @@
                 android:backgroundTint="#F5F5F5"
                 android:layout_margin="2dp" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnYearly"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:text="Yearly"
+                android:textAllCaps="false"
                 android:textSize="14sp"
                 android:textColor="#757575"
                 android:textStyle="bold"

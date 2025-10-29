@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when the button is selected -->
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/style_button_selected_color" />
+        </shape>
+    </item>
+    <!-- Default, unselected state -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/style_button_default_color" />
+        </shape>
+    </item>
+</selector>

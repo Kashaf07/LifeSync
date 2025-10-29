@@ -112,15 +112,15 @@ public class transactions extends Fragment {
     private void updateFilterButtons() {
         // Reset all buttons to inactive state
         btnDaily.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                getResources().getColor(android.R.color.transparent)));
+                getResources().getColor(android.R.color.white)));
         btnDaily.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
         btnMonthly.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                getResources().getColor(android.R.color.transparent)));
+                getResources().getColor(android.R.color.white)));
         btnMonthly.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
         btnYearly.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                getResources().getColor(android.R.color.transparent)));
+                getResources().getColor(android.R.color.white)));
         btnYearly.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
         // Set active button

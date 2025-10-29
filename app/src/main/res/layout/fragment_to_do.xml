@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
+        android:paddingTop="40dp"
         android:paddingBottom="0dp">
 
         <!-- Header with Title -->
@@ -18,7 +19,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="My To-Do List 📋"
+            android:text="@string/my_to_do_list"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -45,7 +46,7 @@
                     android:id="@+id/tvTotalTasks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#333333"/>
@@ -53,7 +54,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total"
+                    android:text="@string/total"
                     android:textSize="12sp"
                     android:textColor="#666666"/>
             </LinearLayout>
@@ -74,7 +75,7 @@
                     android:id="@+id/tvPendingTasks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#FF6B6B"/>
@@ -82,7 +83,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pending"
+                    android:text="@string/pending_"
                     android:textSize="12sp"
                     android:textColor="#666666"/>
             </LinearLayout>
@@ -103,7 +104,7 @@
                     android:id="@+id/tvCompletedTasks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="#51CF66"/>
@@ -111,7 +112,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Done"
+                    android:text="@string/done"
                     android:textSize="12sp"
                     android:textColor="#666666"/>
             </LinearLayout>
@@ -150,44 +151,60 @@
                     android:id="@+id/chipAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All Tasks"
+                    android:text="@string/all_tasks"
                     android:checked="true"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     app:chipBackgroundColor="@color/chip_bg_selector"
                     app:chipStrokeColor="#FFB6C1"
-                    app:chipStrokeWidth="1dp"/>
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipPending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⏳ Pending"
+                    android:text="@string/pending"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     app:chipBackgroundColor="@color/chip_bg_selector"
                     app:chipStrokeColor="#FFB6C1"
-                    app:chipStrokeWidth="1dp"/>
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipCompleted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✅ Completed"
+                    android:text="@string/completed"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     app:chipBackgroundColor="@color/chip_bg_selector"
                     app:chipStrokeColor="#FFB6C1"
-                    app:chipStrokeWidth="1dp"/>
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipHighPriority"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔥 High Priority"
+                    android:text="@string/high_priority"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     app:chipBackgroundColor="@color/chip_bg_selector"
                     app:chipStrokeColor="#FFB6C1"
-                    app:chipStrokeWidth="1dp"/>
+                    app:chipStrokeWidth="1dp"
+                    android:textColor="@color/chip_text_selector"/>
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
+
+        <!-- ADD THIS: Swipe to Delete Hint -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💡 Swipe left to delete task"
+            android:textSize="1sp"
+            android:textColor="#6D6C6C"
+            android:textStyle="italic"
+            android:layout_gravity="end"
+            android:layout_marginBottom="8dp"
+            android:paddingHorizontal="4dp"/>
 
         <!-- Tasks RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
@@ -211,14 +228,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📝"
+                android:text="@string/note_icon"
                 android:textSize="72sp"
                 android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No tasks yet!"
+                android:text="@string/no_tasks_yet"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#333333"
@@ -227,7 +244,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tap the + button to add your first task"
+                android:text="@string/tap_the_button_to_add_your_first_task"
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:gravity="center"/>
@@ -242,7 +259,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="Add Task"
+        android:contentDescription="@string/add_task"
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@android:color/white"
         android:backgroundTint="#FFB6C1"

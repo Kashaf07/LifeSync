@@ -11,4 +11,44 @@
     <string name="habit">Habit</string>
     <string name="expends">Expends</string>
     <string name="journal">Journal</string>
+    <string name="add_task">Add Task</string>
+    <string name="tap_the_button_to_add_your_first_task">Tap the + button to add your first task</string>
+    <string name="no_tasks_yet">No tasks yet!</string>
+    <string name="note_icon">📝</string>
+    <string name="high_priority">🔥 High Priority</string>
+    <string name="completed">✅ Completed</string>
+    <string name="pending">⏳ Pending</string>
+    <string name="all_tasks">All Tasks</string>
+    <string name="done">Done</string>
+    <string name="_0">0</string>
+    <string name="pending_">Pending</string>
+    <string name="total">Total</string>
+    <string name="my_to_do_list">My To-Do List 📋</string>
+    <string name="mon">Mon</string>
+    <string name="_12">12</string>
+    <string name="_3">3</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description">Task description</string>
+    <string name="calendar_icon">📅</string>
+    <string name="_12_01_2025">12/01/2025</string>
+    <string name="high">High</string>
+    <string name="edit_task">Edit Task</string>
+
+
+    <string name="title">Title</string>
+    <string name="write_your_journal_entry_here">Write your journal entry here…</string>
+    <string name="favorite">Favorite</string>
+    <string name="save_as_draft">Save as Draft</string>
+    <string name="make_this_entry_private">Make this entry private</string>
+    <string name="header_your_journal">Your Journal</string>
+    <string name="tab_all">All</string>
+    <string name="tab_drafts">Drafts</string>
+    <string name="tab_favorites">Favorites</string>
+
+
+    <string name="journal_image_description">Journal Image</string>
+    <string name="text_styles_button_description">Text Styles</string>
+    <string name="add_image_button_description">Add Image</string>
+    <string name="add_recording_button_description">Add Recording</string>
+    <string name="more_options_button_description">More Options</string>
 </resources>

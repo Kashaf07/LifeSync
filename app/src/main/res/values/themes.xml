@@ -1,4 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+    ================================================
+    Styles from the first file (LifeSync)
+    ================================================
+    -->
+
     <!-- Base application theme. -->
     <style name="Base.Theme.LifeSync" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -7,7 +14,11 @@
         <item name="colorControlNormal">@null</item>
         <item name="android:buttonTint">@null</item>
 
+        <!-- Disable all caps for buttons -->
+        <item name="textAllCaps">false</item>
+
     </style>
+
     <style name="PinkCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:button">@drawable/custom_checkbox</item>
         <item name="android:background">@null</item>
@@ -21,4 +32,40 @@
 
 
     <style name="Theme.LifeSync" parent="Base.Theme.LifeSync" />
+
+    <!--
+    ================================================
+    Styles from the second file (Journal)
+    ================================================
+    -->
+
+    <style name="Base.Theme.Journal" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/app_primary</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="android:colorBackground">@color/app_background</item>
+
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/app_text_main</item>
+        <item name="colorOnSurfaceVariant">@color/app_text_secondary</item>
+
+        <item name="android:textColor">@color/app_text_main</item>
+        <item name="android:textColorHint">@color/app_text_secondary</item>
+
+        <item name="tabIndicatorColor">@color/app_tab_highlight</item>
+
+    </style>
+
+    <style name="Theme.Journal" parent="Base.Theme.Journal" />
+
+    <style name="Widget.App.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicatorColor">@color/app_tab_highlight</item>
+        <item name="tabSelectedTextColor">@color/app_tab_highlight</item>
+        <item name="tabTextColor">@color/app_text_secondary</item>
+        <item name="android:background">?attr/android:colorBackground</item>
+    </style>
+
 </resources>

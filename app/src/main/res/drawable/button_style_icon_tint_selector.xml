@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when the button is selected -->
+    <item android:state_selected="true" android:color="@color/style_button_selected_icon_color" />
+    <!-- Default, unselected state (uses the default icon color) -->
+    <item android:color="?attr/colorControlNormal" />
+</selector>
