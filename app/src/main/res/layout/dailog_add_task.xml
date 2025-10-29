@@ -91,14 +91,15 @@
             android:gravity="center_vertical"
             android:layout_marginTop="12dp">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSelectDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/bg_button"
                 android:text="Select Deadline"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textAllCaps="false"/>
 
             <ImageView
                 android:id="@+id/ivDescToggle"
@@ -126,7 +127,7 @@
             android:layout_marginTop="8dp"/>
 
         <!-- Save Button -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSaveTask"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
