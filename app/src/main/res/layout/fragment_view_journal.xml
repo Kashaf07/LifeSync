@@ -6,16 +6,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/android:colorBackground"
-    tools:context=".FragmentViewJournal"> <com.google.android.material.appbar.MaterialToolbar
-    android:id="@+id/topAppBar"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="@color/app_primary"
-    android:elevation="4dp"
-    app:navigationIcon="?attr/homeAsUpIndicator"
-    app:navigationIconTint="?attr/colorOnPrimary"
-    app:title="View Journal"
-    app:titleTextColor="?attr/colorOnPrimary" />
+    tools:context=".FragmentViewJournal">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/app_background"
+        android:backgroundTint="@color/app_primary"
+        android:elevation="4dp"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="?attr/colorOnPrimary"
+        app:title="View Journal"
+        app:titleTextColor="?attr/colorOnPrimary" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +41,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:paddingBottom="8dp"
                 android:text="Journal Title"
-                android:textColor="?attr/colorOnSurface"
+                android:textColor="#DE000000"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -46,10 +49,11 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/app_background"
                 android:fontFamily="sans-serif"
                 android:paddingBottom="20dp"
                 android:text="Date"
-                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textColor="#8A000000"
                 android:textSize="14sp" />
 
             <include layout="@layout/audio_player" />
@@ -64,7 +68,7 @@
                 android:id="@+id/contentWebView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSurface"
+                android:background="@color/app_background"
                 tools:ignore="WebViewLayout" />
 
         </LinearLayout>

@@ -5,27 +5,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
-import android.widget.Toast; // --- ADDED ---
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction; // --- ADDED ---
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-// --- FIXED IMPORTS: Ensure these point to your lifecync package ---
-// If these still show errors, double-check the file paths and package names
-// import com.example.lifesync.DBHelper; // Assuming DBHelper is in com.example.lifesync
-// import com.example.lifesync.Journal; // Assuming Journal is in com.example.lifesync
-// import com.example.lifesync.JournalAdapter; // Assuming JournalAdapter is in com.example.lifesync
-// --- END FIXED IMPORTS ---
-
 import java.util.ArrayList;
 
-// --- UPDATED: Implement the click listener ---
 public class FragmentPrivateJournal extends Fragment implements JournalAdapter.OnJournalClickListener {
 
     private static final String PREFS_NAME = "JournalPrefs";
@@ -37,14 +29,14 @@ public class FragmentPrivateJournal extends Fragment implements JournalAdapter.O
     private JournalAdapter journalAdapter;
     private DBHelper dbHelper;
     private SharedPreferences sharedPreferences;
-    private boolean isGridLayout = true; // Default to grid
+    private boolean isGridLayout = true;
 
     public FragmentPrivateJournal() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true); // Enable menu callbacks in fragment
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -56,7 +48,6 @@ public class FragmentPrivateJournal extends Fragment implements JournalAdapter.O
         Toolbar topAppBar = view.findViewById(R.id.topAppBar);
         if (topAppBar != null) {
             topAppBar.setTitle("Hidden Folder");
-            // --- UPDATED: Use FragmentManager to go back ---
             topAppBar.setNavigationOnClickListener(v -> {
                 if (isAdded()) {
                     getParentFragmentManager().popBackStack();
@@ -82,8 +73,11 @@ public class FragmentPrivateJournal extends Fragment implements JournalAdapter.O
 
     private void loadPrivateJournals() {
         privateJournalArrayList = dbHelper.readJournals("private");
-        // --- UPDATED: Pass 'this' as the listener ---
-        journalAdapter = new JournalAdapter(privateJournalArrayList, getContext(), this);
+
+        // --- THIS IS THE UPDATED LINE ---
+        // We pass "private" as the filter string
+        journalAdapter = new JournalAdapter(privateJournalArrayList, getContext(), this, "private");
+
         privateJournalsRV.setAdapter(journalAdapter);
     }
 
@@ -93,7 +87,7 @@ public class FragmentPrivateJournal extends Fragment implements JournalAdapter.O
         } else {
             privateJournalsRV.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        loadPrivateJournals();
+        loadPrivateJournals(); // This call will now use the new adapter
     }
 
     private void saveLayoutPreference(boolean isGrid) {
@@ -136,8 +130,6 @@ public class FragmentPrivateJournal extends Fragment implements JournalAdapter.O
         return super.onOptionsItemSelected(item);
     }
 
-    // --- UPDATED: Implementation for JournalAdapter.OnJournalClickListener ---
-
     @Override
     public void onJournalClicked(int journalId) {
         Log.d(TAG, "Navigating to view journal: " + journalId);
@@ -162,16 +154,14 @@ public class FragmentPrivateJournal extends Fragment implements JournalAdapter.O
         navigateToFragment(addFragment);
     }
 
-    // --- ADDED: Helper method for navigation ---
     private void navigateToFragment(Fragment fragment) {
         if (isAdded() && getParentFragmentManager() != null) {
             try {
-                // This ID comes from your activity_main.xml file
                 int containerId = R.id.fragment_container;
 
                 getParentFragmentManager().beginTransaction()
                         .replace(containerId, fragment)
-                        .addToBackStack(null) // This lets the user press the back button
+                        .addToBackStack(null)
                         .commit();
             } catch (Exception e) {
                 Log.e(TAG, "Error navigating to fragment. Container ID (R.id.fragment_container) not found?", e);

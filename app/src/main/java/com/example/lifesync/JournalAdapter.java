@@ -21,8 +21,11 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
     private final ArrayList<Journal> journalArrayList;
     private final Context context;
     private final DBHelper dbHelper;
-    // --- ADDED ---
     private final OnJournalClickListener clickListener;
+
+    // --- ADDED ---
+    // This variable will hold the current filter (e.g., "all", "favorites", "private")
+    private final String currentFilter;
 
     // --- Interface for navigation callbacks ---
     public interface OnJournalClickListener {
@@ -31,11 +34,13 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
     }
 
     // --- UPDATED CONSTRUCTOR ---
-    public JournalAdapter(ArrayList<Journal> journalArrayList, Context context, OnJournalClickListener listener) {
+    // We now accept the currentFilter string
+    public JournalAdapter(ArrayList<Journal> journalArrayList, Context context, OnJournalClickListener listener, String currentFilter) {
         this.journalArrayList = journalArrayList;
         this.context = context;
         this.dbHelper = new DBHelper(context);
-        this.clickListener = listener; // Assign listener
+        this.clickListener = listener;
+        this.currentFilter = (currentFilter != null) ? currentFilter : "all"; // Default to "all"
     }
 
     @NonNull
@@ -52,7 +57,6 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
         holder.dateTV.setText(journal.getDate());
 
 
-        // --- UPDATED: Use listener for navigation ---
         holder.itemView.setOnClickListener(v -> {
             if (clickListener != null) {
                 clickListener.onJournalClicked(journal.getId());
@@ -84,7 +88,6 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
 
         popup.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
-            // --- UPDATED: Use listener for edit navigation ---
             if (itemId == R.id.action_edit) {
                 if (clickListener != null) {
                     clickListener.onJournalEditClicked(journal.getId());
@@ -113,17 +116,48 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.ViewHold
                         .setNegativeButton("No", null)
                         .show();
                 return true;
-            } else if (itemId == R.id.action_toggle_favorite) {
+            }
+            // --- ENTIRE LOGIC FOR FAVORITE AND PRIVATE IS UPDATED ---
+            else if (itemId == R.id.action_toggle_favorite) {
                 journal.setFavorite(!journal.isFavorite());
                 dbHelper.updateJournal(journal);
-                notifyItemChanged(position);
+
+                if (currentFilter.equals("favorites") && !journal.isFavorite()) {
+                    // We are on the "Favorites" tab AND we just un-favorited it
+                    // Remove it from the list immediately
+                    journalArrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, journalArrayList.size());
+                } else {
+                    // We are on any other tab ("all", "drafts")
+                    // Or we just ADDED it to favorites (so it should stay in the "all" list)
+                    // Just update the item's view
+                    notifyItemChanged(position);
+                }
                 return true;
             } else if (itemId == R.id.action_toggle_private) {
                 journal.setPrivate(!journal.isPrivate());
                 dbHelper.updateJournal(journal);
-                journalArrayList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, journalArrayList.size());
+
+                boolean wasMadePrivate = journal.isPrivate();
+
+                if (currentFilter.equals("private") && !wasMadePrivate) {
+                    // We are on the "Private" tab AND we just made it public
+                    // Remove it from the list
+                    journalArrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, journalArrayList.size());
+                } else if (!currentFilter.equals("private") && wasMadePrivate) {
+                    // We are on a public tab ("all", "drafts", "favorites") AND we just made it private
+                    // Remove it from the list
+                    journalArrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, journalArrayList.size());
+                } else {
+                    // No removal needed (e.g., on "all" tab and made it public)
+                    // Just update the item's view
+                    notifyItemChanged(position);
+                }
                 Toast.makeText(context, journal.isPrivate() ? "Journal made private" : "Journal made public", Toast.LENGTH_SHORT).show();
                 return true;
             } else {

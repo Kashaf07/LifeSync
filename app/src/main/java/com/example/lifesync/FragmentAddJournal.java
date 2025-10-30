@@ -34,7 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager; // --- ADDED IMPORT ---
+import android.view.WindowManager; // --- THIS IMPORT IS NEEDED ---
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -55,7 +55,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-// --- REMOVED: import androidx.navigation.fragment.NavHostFragment; ---
 
 import java.io.File;
 import java.io.IOException;
@@ -112,7 +111,9 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
     private int currentFontColor = Color.BLACK;
     private int currentHighlightColor = Color.TRANSPARENT;
     private boolean isExitingViaSaveButton = false;
-    private int originalSoftInputMode = -1; // --- ADDED ---
+
+    // --- THIS IS PART OF THE FIX ---
+    private int originalSoftInputMode = -1;
 
     // --- AUDIO ---
     private String audioPath = null;
@@ -201,10 +202,12 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
         super.onViewCreated(view, savedInstanceState);
 
         // --- THIS IS THE FIX (PART 1) ---
-        // Save the original soft input mode and set it to ADJUST_RESIZE
+        // Save the original soft input mode and set it to ADJUST_PAN.
+        // This makes the window pan, but NOT resize.
+        // The keyboard will slide up OVER the bottom toolbar.
         if (getActivity() != null && getActivity().getWindow() != null) {
             originalSoftInputMode = getActivity().getWindow().getAttributes().softInputMode;
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         }
         // --- END OF FIX ---
 
@@ -213,11 +216,14 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
         titleEditText = view.findViewById(R.id.titleEditText);
         contentEditText = view.findViewById(R.id.contentEditText);
         journalImageView = view.findViewById(R.id.journalImageView);
+
         playerLayout = view.findViewById(R.id.audioPlayerLayout);
+
         buttonPlay = playerLayout.findViewById(R.id.buttonPlay);
         buttonDeleteAudio = playerLayout.findViewById(R.id.buttonDeleteAudio);
         textAudioStatus = playerLayout.findViewById(R.id.textAudioStatus);
         audioSeekBar = playerLayout.findViewById(R.id.audioSeekBar);
+
         addRecordingButton = view.findViewById(R.id.addRecordingButton);
 
         // --- Setup Toolbar ---
@@ -237,9 +243,7 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
             }
         }
 
-        // --- UPDATED: Set toolbar navigation click ---
         topAppBar.setNavigationOnClickListener(v -> {
-            // Save as draft on back button press
             saveJournal(false);
         });
 
@@ -255,6 +259,27 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
         setupPlayerListeners();
         setupSeekBarListener();
     }
+
+    // --- LIFECYCLE: onResume ---
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getView() != null && getActivity() instanceof AppCompatActivity) {
+            Toolbar topAppBar = getView().findViewById(R.id.topAppBar);
+            ((AppCompatActivity) getActivity()).setSupportActionBar(topAppBar);
+
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                if (journalId != -1) {
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Edit Journal");
+                } else {
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("New Journal");
+                }
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+            getActivity().invalidateOptionsMenu();
+        }
+    }
+
 
     private void initializeAudioPermissionLauncher() {
         audioPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -474,12 +499,7 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
     private void setupBottomToolbar() {
         rootView.findViewById(R.id.textStyleButton).setOnClickListener(v -> {
             TextStyleBottomSheet bottomSheet = new TextStyleBottomSheet();
-
-            // --- THIS IS THE FIX ---
-            // Tell the bottom sheet that *this* fragment is the listener
             bottomSheet.setTargetFragment(this, 0);
-            // --- END OF FIX ---
-
             bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
         });
 
@@ -1141,7 +1161,6 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
         } else {
             Log.w(TAG, "Could not find journal with ID: " + journalId + " in database.");
             Toast.makeText(getContext(), "Error loading journal.", Toast.LENGTH_SHORT).show();
-            // --- UPDATED: Use FragmentManager ---
             if(isAdded()) {
                 getParentFragmentManager().popBackStack();
             }
@@ -1256,7 +1275,6 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
                     dbHelper.deleteJournal(journalId);
                     Toast.makeText(getContext(), "Empty journal deleted.", Toast.LENGTH_SHORT).show();
                 }
-                // --- UPDATED: Use FragmentManager ---
                 if (isAdded()) {
                     getParentFragmentManager().popBackStack();
                 }
@@ -1304,12 +1322,10 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
             } else {
                 Toast.makeText(getContext(), "Error saving new journal", Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Error saving new journal. DB returned ID: " + savedJournalId);
-                // Don't pop back if save failed, user might want to retry
                 return;
             }
         }
 
-        // --- UPDATED: Use FragmentManager ---
         if (isAdded()) {
             getParentFragmentManager().popBackStack();
         }
@@ -1338,8 +1354,11 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
             menu.findItem(R.id.action_undo).setEnabled(undoRedoManager.canUndo());
             menu.findItem(R.id.action_redo).setEnabled(undoRedoManager.canRedo());
         } else {
-            menu.findItem(R.id.action_undo).setEnabled(false);
-            menu.findItem(R.id.action_redo).setEnabled(false);
+            MenuItem undoItem = menu.findItem(R.id.action_undo);
+            if (undoItem != null) undoItem.setEnabled(false);
+
+            MenuItem redoItem = menu.findItem(R.id.action_redo);
+            if (redoItem != null) redoItem.setEnabled(false);
         }
         super.onPrepareOptionsMenu(menu);
     }
@@ -1348,7 +1367,6 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
-            // This is handled by the toolbar's setNavigationOnClickListener
             return true;
         }
         if (itemId == R.id.action_save) {
@@ -1402,7 +1420,7 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
         if (getActivity() != null && getActivity().getWindow() != null && originalSoftInputMode != -1) {
             getActivity().getWindow().setSoftInputMode(originalSoftInputMode);
         }
-        // --- END OF FIX ---
+        // --- END OF FIX --
 
         // Clean up toolbar
         if (getActivity() instanceof AppCompatActivity) {
@@ -1422,6 +1440,5 @@ public class FragmentAddJournal extends Fragment implements UndoRedoManager.Undo
             try { mediaRecorder.release(); } catch (Exception ignored) {}
             mediaRecorder = null;
         }
-        // --- MOVED: rootView = null; was moved to onDestroyView ---
     }
 }

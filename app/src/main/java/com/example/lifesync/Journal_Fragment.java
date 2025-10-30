@@ -11,12 +11,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity; // --- ADDED IMPORT ---
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-// --- UPDATED ---
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-// --- END UPDATE ---
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -38,7 +36,7 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
     private ArrayList<Journal> journalArrayList;
     private JournalAdapter journalAdapter;
     private DBHelper dbHelper;
-    private String currentFilter = "all";
+    private String currentFilter = "all"; // Default filter
 
     private SharedPreferences sharedPreferences;
     private boolean isGridLayout = false;
@@ -59,7 +57,6 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
 
         MaterialToolbar topAppBar = view.findViewById(R.id.topAppBar);
 
-        // You must tell the Activity to use your fragment's toolbar
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(topAppBar);
         }
@@ -72,7 +69,6 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
 
         FloatingActionButton newEntryFab = view.findViewById(R.id.newEntryFab);
 
-        // --- UPDATED: Use FragmentManager to navigate ---
         newEntryFab.setOnClickListener(fabView -> {
             Bundle args = new Bundle();
             args.putInt("JOURNAL_ID", -1);
@@ -107,7 +103,7 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
         } else {
             journalsRV.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        loadJournals(currentFilter);
+        loadJournals(currentFilter); // This call will now pass the filter
     }
 
     private void saveLayoutPreference(boolean isGrid) {
@@ -120,23 +116,22 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
     public void onResume() {
         super.onResume();
 
-        // --- THIS IS THE FIX ---
-        // Re-assert this fragment's toolbar when it becomes visible again
-        // This is necessary because FragmentViewJournal sets its own toolbar
         if (getView() != null && getActivity() instanceof AppCompatActivity) {
             MaterialToolbar topAppBar = getView().findViewById(R.id.topAppBar);
             ((AppCompatActivity) getActivity()).setSupportActionBar(topAppBar);
         }
-        // --- END OF FIX ---
 
-        loadJournals(currentFilter);
+        loadJournals(currentFilter); // Reloads the list with the correct filter
     }
 
     private void loadJournals(String filter) {
         currentFilter = filter;
         journalArrayList = dbHelper.readJournals(filter);
-        // --- UPDATED: Pass 'this' as the listener ---
-        journalAdapter = new JournalAdapter(journalArrayList, getContext(), this);
+
+        // --- THIS IS THE UPDATED LINE ---
+        // We now pass the 'currentFilter' string to the adapter's constructor
+        journalAdapter = new JournalAdapter(journalArrayList, getContext(), this, currentFilter);
+
         journalsRV.setAdapter(journalAdapter);
     }
 
@@ -178,7 +173,6 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
         if (keyguardManager.isKeyguardSecure()) {
             Intent intent = keyguardManager.createConfirmDeviceCredentialIntent("Authentication Required", description);
             if (intent != null) {
-                // --- Use startActivityForResult directly from the fragment ---
                 startActivityForResult(intent, requestCode);
             } else {
                 Toast.makeText(getContext(), "Could not launch lock screen.", Toast.LENGTH_SHORT).show();
@@ -191,10 +185,8 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // This method will now be called by MainActivity's onActivityResult
         if (resultCode == getActivity().RESULT_OK) {
             if (requestCode == LOCK_REQUEST_CODE_PRIVATE_FOLDER) {
-                // --- UPDATED: Use FragmentManager to navigate ---
                 navigateToFragment(new FragmentPrivateJournal());
             }
         }
@@ -226,16 +218,14 @@ public class Journal_Fragment extends Fragment implements JournalAdapter.OnJourn
         navigateToFragment(addFragment);
     }
 
-    // --- ADDED: Helper method for navigation ---
     private void navigateToFragment(Fragment fragment) {
         if (isAdded() && getParentFragmentManager() != null) {
             try {
-                // This ID comes from your activity_main.xml file
                 int containerId = R.id.fragment_container;
 
                 getParentFragmentManager().beginTransaction()
                         .replace(containerId, fragment)
-                        .addToBackStack(null) // This lets the user press the back button
+                        .addToBackStack(null)
                         .commit();
             } catch (Exception e) {
                 Log.e(TAG, "Error navigating to fragment. Container ID (R.id.fragment_container) not found?", e);
