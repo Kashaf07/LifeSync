@@ -198,8 +198,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="💡 Swipe left to delete task"
-            android:textSize="1sp"
+            android:text="@string/swipe_left_to_delete_task"
+            android:textSize="12sp"
             android:textColor="#6D6C6C"
             android:textStyle="italic"
             android:layout_gravity="end"

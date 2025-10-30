@@ -6,6 +6,11 @@
     <color name="purple_700">#8700BB</color>
     <color name="purple_200">#B136F4</color>
     <color name="gray">#888888</color>
+    <color name="teal_700">#018786</color>
+
+
+
+
 
 
     <color name="app_background">#E0E6E8</color>
@@ -20,5 +25,12 @@
     <color name="style_button_selected_icon_color">#9B59B6</color>
     <color name="style_button_default_color">#00000000</color>
     <color name="button_selected_background">#E0E0E0</color>
+
+    <!-- Navigation colors -->
+    <color name="dashboard_lavender">#E5CFF7</color>
+    <color name="todo_pink">#FFB6C1</color>
+    <color name="habits_teal">#20B2AA</color>
+    <color name="expense_green">#59A96A</color>
+    <color name="journal_sky_blue">#A4C0D5</color>
 
 </resources>

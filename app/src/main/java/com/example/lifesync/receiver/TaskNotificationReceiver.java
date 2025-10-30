@@ -3,7 +3,8 @@ package com.example.lifesync.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.example.lifesync.NotificationHelper;
+
+import com.example.lifesync.NotificationHelper; // <-- ADD THIS IMPORT
 
 public class TaskNotificationReceiver extends BroadcastReceiver {
     @Override

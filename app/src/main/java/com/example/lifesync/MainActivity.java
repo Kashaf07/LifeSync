@@ -1,17 +1,25 @@
 package com.example.lifesync;
 
-import android.content.Intent; // --- ADDED ---
 import android.os.Bundle;
-import androidx.annotation.Nullable; // --- ADDED ---
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
+import android.graphics.Color;
+import android.os.Build;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
+
+    // CONSOLIDATED PRIMARY COLOR (Dark Purple/Violet) for Dashboard, Journal, and To Do
+    private static final int COLOR_PRIMARY_DARK = Color.parseColor("#5B5F97");
+
+    // Theme-specific colors from the layouts
+    private static final int COLOR_HABITS = Color.parseColor("#2D6071");    // Dark Teal/Cyan (Habit FABs/Header Accent)
+    private static final int COLOR_EXPENSE = Color.parseColor("#2E4E3F");   // Dark Green/Teal (Expense Header Text/Accents)
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,20 +28,22 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        // Make layout fully use the screen area safely (handles gesture navigation)
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
+        // Remove extra space below bottom navigation
         ViewCompat.setOnApplyWindowInsetsListener(bottomNavigationView, (view, insets) -> {
+            // Disable Android's automatic bottom inset padding
             view.setPadding(0, 0, 0, 0);
             return insets;
         });
 
+        // Load the Dashboard fragment by default
         if (savedInstanceState == null) {
-            // --- FIX: Ensure container isn't null and load fragment ---
-            if (findViewById(R.id.fragment_container) != null) {
-                loadFragment(new Dashboard_Fragment());
-            }
+            loadFragment(new Dashboard_Fragment());
         }
 
+        // Handle navigation item clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             Fragment selectedFragment = null;
@@ -58,32 +68,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setStatusBarColor(int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(color);
+        }
+    }
+
+
     private void loadFragment(Fragment fragment) {
-        // --- FIX: Use getSupportFragmentManager() ---
+        // Check if the fragment is the one currently visible to avoid redundant replace calls.
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment != null && fragment.getClass().equals(currentFragment.getClass())) {
+            return;
+        }
+
+        // Determine color based on the fragment being loaded
+        int statusBarColor;
+        if (fragment instanceof Dashboard_Fragment) {
+            statusBarColor = COLOR_PRIMARY_DARK; // Consolidated primary color
+        } else if (fragment instanceof Journal_Fragment) {
+            statusBarColor = COLOR_PRIMARY_DARK; // Consolidated primary color
+        } else if (fragment instanceof To_Do_Fragment) {
+            statusBarColor = COLOR_PRIMARY_DARK; // Consolidated primary color
+        } else if (fragment instanceof Habit_Fragment) {
+            statusBarColor = COLOR_HABITS;
+        } else if (fragment instanceof Expense_Fragment) {
+            statusBarColor = COLOR_EXPENSE;
+        } else {
+            // Default fallback color
+            statusBarColor = Color.BLACK;
+        }
+
+        // Apply status bar color before starting the transaction
+        setStatusBarColor(statusBarColor);
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
-    // --- ADDED: Handle onActivityResult for FragmentViewJournal lock screen ---
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Find the current fragment in the container
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-        // Check if it's the FragmentViewJournal
-        if (currentFragment instanceof FragmentViewJournal) {
-            // Forward the result to the fragment's custom method
-            ((FragmentViewJournal) currentFragment).onActivityResultExternal(requestCode, resultCode, data);
-        }
-
-        // --- ADDED: Also forward to Journal_Fragment (for its lock screen) ---
-        else if (currentFragment instanceof Journal_Fragment) {
-            // Journal_Fragment uses the standard onActivityResult
-            currentFragment.onActivityResult(requestCode, resultCode, data);
-        }
+                .commitAllowingStateLoss();
     }
 }
