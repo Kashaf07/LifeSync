@@ -214,6 +214,7 @@ public class FragmentViewJournal extends Fragment {
             playerLayout.setVisibility(View.GONE);
             requestAuthentication(INITIAL_LOCK_REQUEST_CODE, "Unlock to view this journal.");
         } else {
+            // This 'else' block will now run correctly after you unlock
             titleTextView.setText(currentJournal.getTitle());
             dateTextView.setText(currentJournal.getDate());
             currentAudioPath = currentJournal.getAudioPath();

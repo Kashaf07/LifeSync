@@ -1,6 +1,8 @@
 package com.example.lifesync;
 
+import android.content.Intent; // --- ADDED IMPORT ---
 import android.os.Bundle;
+import androidx.annotation.Nullable; // --- ADDED IMPORT ---
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -106,5 +108,43 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commitAllowingStateLoss();
+    }
+
+    // --- THIS IS THE ADDED METHOD TO FIX THE UNLOCK ---
+    /**
+     * This method "catches" the result from the lock screen.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // This line is VERY important. It lets all other fragments
+        // handle their own results (like picking an image).
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Find the fragment that is currently on the screen
+        // This MUST match the ID in your R.layout.activity_main
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        // Check if the result is for our FragmentViewJournal
+        if (fragment instanceof FragmentViewJournal) {
+            // Yes, it is. Pass the unlock result down to the fragment.
+            // This is the line that fixes your "glitch".
+            ((FragmentViewJournal) fragment).onActivityResultExternal(requestCode, resultCode, data);
+        }
+
+        // --- ADDED SUPPORT FOR FRAGMENT PRIVATE JOURNAL ---
+        // (Just in case you add this feature to the folder list)
+        else if (fragment instanceof FragmentPrivateJournal) {
+            // If you add authentication to FragmentPrivateJournal,
+            // you'll need to add a similar .onActivityResultExternal() method to it.
+        }
+
+        // --- ADDED SUPPORT FOR FRAGMENT ADD JOURNAL ---
+        // (For image/audio picking results)
+        else if (fragment instanceof FragmentAddJournal) {
+            // The FragmentAddJournal should handle its own result.
+            // The super.onActivityResult(...) call above should be enough,
+            // but if not, you can explicitly pass it.
+            // ((FragmentAddJournal) fragment).onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
