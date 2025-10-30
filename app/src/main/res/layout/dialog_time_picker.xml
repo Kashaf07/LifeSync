@@ -4,79 +4,86 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@drawable/dialog_bg_rounded">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-medium"
-            android:text="Select Time"
-            android:textColor="#1A1A1A"
-            android:textSize="20sp" />
-        <ImageView
-            android:id="@+id/ivClose"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_close"
-            app:tint="#1A1A1A"
-            android:contentDescription="Close" />
-    </RelativeLayout>
+    android:padding="20dp"
+    android:background="@drawable/dialog_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select Time"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#1A1A1A" />
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="Close"
+            app:tint="#1A1A1A" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="24dp">
 
         <NumberPicker
             android:id="@+id/hourPicker"
-            android:layout_width="60dp"
-            android:layout_height="180dp"
-            android:textColorPrimary="#1A1A1A" android:textColor="#1A1A1A"
-            android:textColorSecondary="#1A1A1A" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:text=":"
-            android:textColor="#1A1A1A"
-            android:textSize="32sp" />
+            android:textColorPrimary="#1A1A1A" /> <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":"
+        android:textSize="20sp"
+        android:padding="4dp"
+        android:textColor="#1A1A1A" />
 
         <NumberPicker
             android:id="@+id/minutePicker"
-            android:layout_width="60dp"
-            android:layout_height="180dp"
-            android:textColorPrimary="#1A1A1A" android:textColor="#1A1A1A"
-            android:textColorSecondary="#1A1A1A" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColorPrimary="#1A1A1A" /> <NumberPicker
+        android:id="@+id/periodPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColorPrimary="#1A1A1A" /> </LinearLayout>
 
-        <NumberPicker
-            android:id="@+id/periodPicker"
-            android:layout_width="70dp"
-            android:layout_height="180dp"
-            android:layout_marginStart="8dp"
-            android:textColorPrimary="#1A1A1A" android:textColor="#1A1A1A"
-            android:textColorSecondary="#1A1A1A" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnConfirmTime"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#5B5F97"
-        android:fontFamily="sans-serif-medium"
-        android:text="Confirm"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="32dp">
 
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:backgroundTint="#FF5252"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:backgroundTint="#5B5F97"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 </LinearLayout>

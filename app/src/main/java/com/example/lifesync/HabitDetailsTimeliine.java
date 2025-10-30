@@ -138,6 +138,7 @@ public class HabitDetailsTimeliine extends Fragment {
         // Only add COMPLETED habits to the timeline
         if (!habitsToDisplay.isEmpty()) {
             for (Habit habit : habitsToDisplay) {
+                // Assuming isHabitActiveOnDate logic is complex and checking completion is sufficient here for display
                 boolean isCompleted = databaseHelper.isHabitCompletedOnDate(habit.getId(), dateStr);
 
                 if (isCompleted) {

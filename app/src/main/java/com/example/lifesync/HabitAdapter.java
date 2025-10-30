@@ -20,29 +20,12 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
 
     private List<Habit> habitList;
     private Context context;
-    private OnHabitClickListener clickListener;
+    private OnHabitActionListener actionListener;
 
-    // ✅ NEW INTERFACE - Used by Habit_Fragment
-    public interface OnHabitClickListener {
-        void onEditClick(Habit habit);
-        void onDeleteClick(Habit habit);
-    }
-
-    // ✅ CONSTRUCTOR for Habit_Fragment
-    public HabitAdapter(List<Habit> habitList, Context context, OnHabitClickListener clickListener) {
-        this.habitList = habitList;
-        this.context = context;
-        this.clickListener = clickListener;
-    }
-
-    // OLD INTERFACE - Keep for backward compatibility if used elsewhere
     public interface OnHabitActionListener {
         void onHabitMarkComplete(Habit habit, int position);
         void onHabitEditClick(Habit habit, int position);
     }
-
-    // OLD CONSTRUCTOR - Keep for backward compatibility
-    private OnHabitActionListener actionListener;
 
     public HabitAdapter(List<Habit> habitList, Context context, OnHabitActionListener listener) {
         this.habitList = habitList;
@@ -64,51 +47,40 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
 
         holder.tvHabitName.setText(habit.getName());
 
-        // Card styling based on completion status
+        // Text Color always DARK
+        holder.tvHabitName.setTextColor(Color.parseColor("#2D3748"));
+        holder.tvHabitName.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        // Card and Icon styling based on completion status
         if (habit.isCompleted()) {
             try {
+                // Completed: Card background is habit color, Icon shows happy face
                 holder.habitCard.setCardBackgroundColor(Color.parseColor(habit.getColor()));
             } catch (Exception e) {
                 holder.habitCard.setCardBackgroundColor(Color.parseColor("#A7C7E7"));
             }
             holder.tvEmojiIcon.setText("😊");
+            holder.tvEmojiIcon.setAlpha(1.0f); // Full opacity when completed
         } else {
+            // Not Completed: Card background is WHITE, Icon shows disappointed face
             holder.habitCard.setCardBackgroundColor(Color.WHITE);
             holder.tvEmojiIcon.setText("😞");
+            holder.tvEmojiIcon.setAlpha(1.0f); // FIX: Set to full opacity (1.0f)
         }
-
-        holder.tvHabitName.setTextColor(Color.BLACK);
-        holder.tvHabitName.setTypeface(null, android.graphics.Typeface.BOLD);
 
         // Show date range if available
         String dateRangeText = getDateRangeText(habit);
         if (dateRangeText != null && !dateRangeText.isEmpty()) {
             holder.tvHabitProgress.setVisibility(View.VISIBLE);
             holder.tvHabitProgress.setText(dateRangeText);
-            holder.tvHabitProgress.setTextColor(Color.parseColor("#666666"));
-            holder.tvHabitProgress.setTextSize(12);
+            holder.tvHabitProgress.setTextColor(Color.parseColor("#718096"));
+            holder.tvHabitProgress.setTextSize(14);
         } else {
             holder.tvHabitProgress.setVisibility(View.GONE);
         }
 
-        // ✅ Handle clicks based on which listener is set
-        if (clickListener != null) {
-            // For Habit_Fragment - card deletes, pencil edits
-            holder.habitCard.setOnClickListener(v -> {
-                int adapterPosition = holder.getAdapterPosition();
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    clickListener.onDeleteClick(habit);
-                }
-            });
-
-            holder.ivEditPencil.setOnClickListener(v -> {
-                int adapterPosition = holder.getAdapterPosition();
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    clickListener.onEditClick(habit);
-                }
-            });
-        } else if (actionListener != null) {
-            // For other fragments using OnHabitActionListener
+        // Handle clicks for Mark Complete and Edit
+        if (actionListener != null) {
             holder.habitCard.setOnClickListener(v -> {
                 int adapterPosition = holder.getAdapterPosition();
                 if (adapterPosition != RecyclerView.NO_POSITION) {

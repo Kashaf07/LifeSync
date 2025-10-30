@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +60,7 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
 
     private static final String TAG = "Habit_Fragment";
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
-    private static final String ADD_HABIT_REQUEST_KEY = "add_habit_result"; // Key for Fragment Result API
+    private static final String ADD_HABIT_REQUEST_KEY = "add_habit_result";
 
     private static final int COLOR_DATE_CARD_TRANSPARENT = Color.parseColor("#44FFFFFF");
     private static final int COLOR_DATE_CARD_SELECTED = Color.parseColor("#33FFFFFF");
@@ -73,10 +75,16 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
     private FloatingActionButton fabCalendar;
     private TextView tvCalendarLabel;
 
+    // Empty State Views
+    private LinearLayout llEmptyStateContainer; // Container (same as in timeline fragment)
+    private ImageView ivNoData; // Using 'ivNoData' to match fragment_habit_details_timeline.xml
+    private TextView tvEmptyMessage; // Message text view
+
     private TextView tvTodayLabel;
     private TextView tvFilterAll;
     private LinearLayout headerSection;
     private LinearLayout dateStripContainer;
+    private TextView tvSwipeHint;
 
     private KonfettiView konfettiView;
 
@@ -147,7 +155,7 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         return rootView;
     }
 
-    // --- Fragment Result Listener for AddHabitFragment (FIX) ---
+    // --- Fragment Result Listener for AddHabitFragment ---
     private void setupFragmentResultListener() {
         getParentFragmentManager().setFragmentResultListener(ADD_HABIT_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
@@ -187,6 +195,67 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         });
     }
 
+    private void setupHeader() {
+        if (tvFilterAll != null) {
+            tvFilterAll.setOnClickListener(v -> showFilterDialog());
+        }
+        if (tvTodayLabel != null) {
+            tvTodayLabel.setOnClickListener(v -> jumpToToday());
+        }
+        updateFilterTextView();
+    }
+
+    private void animateCalendarLabel() {
+        if (tvCalendarLabel != null) {
+            // Reset to ensure it's visible before animating
+            tvCalendarLabel.setVisibility(View.VISIBLE);
+            tvCalendarLabel.setAlpha(0f);
+            tvCalendarLabel.setTranslationY(dpToPx(20)); // Arbitrary starting point for slide up
+
+            tvCalendarLabel.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(500)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+
+            // Auto-hide after 3 seconds
+            tvCalendarLabel.postDelayed(() -> {
+                if (tvCalendarLabel.getAlpha() > 0.5f) { // Check if it's visible
+                    tvCalendarLabel.animate()
+                            .alpha(0f)
+                            .setDuration(300)
+                            .withEndAction(() -> tvCalendarLabel.setVisibility(View.INVISIBLE))
+                            .start();
+                }
+            }, 3000);
+        }
+    }
+
+    private void startKonfettiCelebration() {
+        if (konfettiView == null) return;
+
+        // Define the configuration for the confetti emitter
+        EmitterConfig emitterConfig = new Emitter(50, TimeUnit.MILLISECONDS).max(50);
+
+        // Define the shapes and colors
+        final List<Shape> shapes = Arrays.asList(Shape.Square.INSTANCE, Shape.Circle.INSTANCE);
+        final List<Integer> colors = Arrays.asList(Color.YELLOW, Color.RED, Color.MAGENTA, Color.GREEN, Color.CYAN);
+
+        // Create the party configuration (removed .speed() method)
+        Party party = new PartyFactory(emitterConfig)
+                .shapes(shapes)
+                .spread(360)
+                .angle(90)
+                .timeToLive(2000L)
+                .colors(colors)
+                .position(new Position.Relative(0.5, 0.2)) // Emitter starts slightly above center
+                .build();
+
+        // Launch the confetti
+        konfettiView.start(party);
+    }
+
     private void initializeViews() {
         recyclerViewHabits = rootView.findViewById(R.id.recyclerViewHabits);
         fabAdd = rootView.findViewById(R.id.fabAdd);
@@ -197,6 +266,13 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         headerSection = rootView.findViewById(R.id.headerSection);
         dateStripContainer = rootView.findViewById(R.id.dateStripContainer);
         konfettiView = rootView.findViewById(R.id.konfetti_view);
+        tvSwipeHint = rootView.findViewById(R.id.tvSwipeHint);
+
+        // Initialize Empty State views (assuming you add these to fragment_habit.xml)
+        // FIX: R.id.ivNoHabits is likely R.id.ivNoData based on fragment_habit_details_timeline.xml
+        llEmptyStateContainer = rootView.findViewById(R.id.llEmptyStateContainer);
+        ivNoData = rootView.findViewById(R.id.ivNoData);
+        tvEmptyMessage = rootView.findViewById(R.id.tvEmptyMessage);
     }
 
     @Override
@@ -219,10 +295,67 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         habitAdapter = new HabitAdapter(habitList, getContext(), this);
         recyclerViewHabits.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewHabits.setAdapter(habitAdapter);
+
+        // Attach ItemTouchHelper for swipe-to-delete
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewHabits);
     }
 
-    // --- Navigation Implementations ---
+    // --- ItemTouchHelper Implementation (Swipe-to-Delete) ---
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
 
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) {
+                habitAdapter.notifyItemChanged(position);
+                return;
+            }
+
+            Habit habitToDelete = habitList.get(position);
+
+            if (isDateBefore(selectedDate, todayDate)) {
+                Toast.makeText(getContext(), "❌ Cannot delete habits from past dates.", Toast.LENGTH_LONG).show();
+                habitAdapter.notifyItemChanged(position);
+                return;
+            }
+
+            // Show confirmation dialog
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Delete Habit?")
+                    .setMessage("Are you sure you want to delete \"" + habitToDelete.getName() + "\"? This action will cancel all its future reminders.")
+                    .setPositiveButton("DELETE", (dialog, which) -> {
+                        // 1. Cancel reminders
+                        notificationHelper.cancelHabitReminders(habitToDelete.getId(), habitToDelete.getProgress());
+
+                        // 2. Delete from database
+                        databaseHelper.deleteHabit(habitToDelete.getId());
+
+                        // 3. Update UI list
+                        habitList.remove(position);
+                        habitAdapter.notifyItemRemoved(position);
+                        loadHabitsForSelectedDate(); // Reload to ensure correct sorting/filtering after deletion
+
+                        Toast.makeText(getContext(), "Habit deleted! 🗑️", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        // Restore the item
+                        habitAdapter.notifyItemChanged(position);
+                    })
+                    .setOnCancelListener(dialog -> {
+                        // Restore on dismiss
+                        habitAdapter.notifyItemChanged(position);
+                    })
+                    .show();
+        }
+    };
+    // --------------------------------------------------------
+
+    // --- Navigation Implementations ---
     private void openCalendarFragment() {
         try {
             FragmentCalendar calendarFragment = new FragmentCalendar();
@@ -261,7 +394,6 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
             args.putString("time", currentTimeFilter);
             filterDialog.setArguments(args);
 
-            // Set this fragment as the listener by passing it as the target fragment (FIX for Filter)
             filterDialog.setTargetFragment(this, 0);
 
             filterDialog.show(fm, "FilterDialog");
@@ -271,7 +403,7 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         }
     }
 
-    // Implementing FilterDialogListener method (FIX)
+    // Implementing FilterDialogListener method
     @Override
     public void onFilterSelected(String status, String time) {
         currentStatusFilter = status;
@@ -282,35 +414,6 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
     }
 
     // --- HabitAdapter.OnHabitActionListener Implementation ---
-
-    @Override
-    public void onHabitEditClick(Habit habit, int position) {
-        if (!selectedDate.equals(todayDate)) {
-            if (isDateBefore(selectedDate, todayDate)) {
-                Toast.makeText(getContext(), "Cannot edit habits for past dates", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
-
-        // Navigation to EditHabitFragment (FIX)
-        try {
-            Bundle bundle = new Bundle();
-            bundle.putInt("habit_id", habit.getId());
-
-            Fragment editFragment = new EditHabitFragment();
-            editFragment.setArguments(bundle);
-
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, editFragment)
-                    .addToBackStack(null)
-                    .commit();
-        } catch (Exception e) {
-            Log.e(TAG, "Error navigating to Edit Habit Fragment: " + e.getMessage());
-            Toast.makeText(getContext(), "Error opening Edit Habit screen.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onHabitMarkComplete(Habit habit, int position) {
         try {
@@ -375,7 +478,35 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         }
     }
 
-    // --- ALL PRIVATE HELPER METHODS (COPIED FROM ACTIVITY) ---
+    @Override
+    public void onHabitEditClick(Habit habit, int position) {
+        if (!selectedDate.equals(todayDate)) {
+            if (isDateBefore(selectedDate, todayDate)) {
+                Toast.makeText(getContext(), "Cannot edit habits for past dates", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putInt("habit_id", habit.getId());
+
+            Fragment editFragment = new EditHabitFragment();
+            editFragment.setArguments(bundle);
+
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, editFragment)
+                    .addToBackStack(null)
+                    .commit();
+        } catch (Exception e) {
+            Log.e(TAG, "Error navigating to Edit Habit Fragment: " + e.getMessage());
+            Toast.makeText(getContext(), "Error opening Edit Habit screen.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    // --- All other helper methods (including missing ones) ---
 
     private void requestAllPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -459,13 +590,7 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
                 new Thread(() -> {
                     try {
                         notificationHelper.rescheduleAllReminders(databaseHelper);
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getContext(),
-                                            "✅ All reminders activated!",
-                                            Toast.LENGTH_SHORT).show()
-                            );
-                        }
+                        // Removed Toast as requested
                     } catch (Exception e) {
                         Log.e(TAG, "Error rescheduling: " + e.getMessage());
                     }
@@ -497,70 +622,32 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         }
     }
 
-    private void animateCalendarLabel() {
-        if (tvCalendarLabel == null) return;
-
-        tvCalendarLabel.setVisibility(View.VISIBLE);
-
-        float startY = tvCalendarLabel.getTranslationY();
-        float endY = startY - dpToPx(30);
-
-        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(tvCalendarLabel, "alpha", 0f, 1f);
-        fadeIn.setDuration(300);
-
-        ObjectAnimator slideUp = ObjectAnimator.ofFloat(tvCalendarLabel, "translationY", startY, endY);
-        slideUp.setDuration(1500);
-        slideUp.setStartDelay(100);
-
-        ObjectAnimator slideDown = ObjectAnimator.ofFloat(tvCalendarLabel, "translationY", endY, startY);
-        slideDown.setDuration(500);
-
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(tvCalendarLabel, "alpha", 1f, 0f);
-        fadeOut.setDuration(300);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playSequentially(fadeIn, slideUp, slideDown, fadeOut);
-        animatorSet.setInterpolator(new DecelerateInterpolator());
-        animatorSet.start();
-
-        tvCalendarLabel.postDelayed(() -> tvCalendarLabel.setVisibility(View.INVISIBLE), 2200);
+    private void animateHeaderEntrance() {
+        if (headerSection != null) {
+            headerSection.setAlpha(0f);
+            headerSection.setTranslationY(-30f);
+            headerSection.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(500)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        }
     }
 
-    private void startKonfettiCelebration() {
-        if (konfettiView == null) {
-            Log.e(TAG, "KonfettiView is null!");
-            return;
+    private void updateFilterTextView() {
+        String filterText = "All ▼";
+
+        if (!currentStatusFilter.equals("All") && !currentTimeFilter.equals("All")) {
+            filterText = currentStatusFilter + " & " + currentTimeFilter + " ▼";
+        } else if (!currentStatusFilter.equals("All")) {
+            filterText = currentStatusFilter + " ▼";
+        } else if (!currentTimeFilter.equals("All")) {
+            filterText = currentTimeFilter + " ▼";
         }
 
-        try {
-            List<Integer> colors = Arrays.asList(
-                    Color.parseColor("#FF69B4"),
-                    Color.parseColor("#FFFF00"),
-                    Color.parseColor("#00FFFF"),
-                    Color.parseColor("#3CB371"),
-                    Color.parseColor("#FF7F50"),
-                    Color.parseColor("#9400D3"),
-                    Color.parseColor("#FF4500"),
-                    Color.parseColor("#1E90FF")
-            );
-
-            EmitterConfig emitterConfig = new Emitter(100L, TimeUnit.MILLISECONDS).max(50);
-
-            Party party = new PartyFactory(emitterConfig)
-                    .angle(270)
-                    .spread(45)
-                    .setSpeedBetween(30f, 60f)
-                    .timeToLive(2000L)
-                    .colors(colors)
-                    .shapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
-                    .position(new Position.Relative(0.5, 1.0))
-                    .build();
-
-            konfettiView.start(party);
-
-            Log.d(TAG, "Konfetti celebration started successfully");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting konfetti: " + e.getMessage(), e);
+        if (tvFilterAll != null) {
+            tvFilterAll.setText(filterText);
         }
     }
 
@@ -617,7 +704,7 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
     private void updateAllDateCards() {
         for (int i = 0; i < dateCards.size() && i < dateStrings.size(); i++) {
             CardView card = dateCards.get(i);
-            String dateStr = dateStrings.get(i);
+            String dateStr = dateStrings.get(i); // Correct variable name is dateStr
             boolean isToday = dateStr.equals(todayDate);
             boolean isPast = isDateBefore(dateStr, todayDate);
 
@@ -625,10 +712,10 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
             LinearLayout innerLayout = (LinearLayout) card.getChildAt(0);
             TextView tvDate = (TextView) innerLayout.getChildAt(0);
             TextView tvDay = (TextView) innerLayout.getChildAt(1);
+            // FIX: Using the correct variable 'dateStr'
             updateDateTextColors(tvDate, tvDay, dateStr, isToday, isPast);
         }
     }
-
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
@@ -715,12 +802,13 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
             final String dateString = fullDateFormat.format(calendar.getTime());
             final int position = i;
             final boolean isToday = dateString.equals(todayDate);
+            final boolean isFuture = calendar.after(today);
             final boolean isPast = calendar.before(today) && !isToday;
 
             dateStrings.add(dateString);
             if (isToday) todayCardIndex = i;
 
-            CardView dateCard = createDateCard(dateString, isToday, false, isPast, position,
+            CardView dateCard = createDateCard(dateString, isToday, isFuture, isPast, position,
                     dayFormat, dateFormat, fullDateFormat, calendar);
 
             dateCards.add(dateCard);
@@ -731,7 +819,7 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
         if (todayCardIndex != -1) {
             dateStripContainer.post(() -> {
                 HorizontalScrollView scrollView = rootView.findViewById(R.id.dateScrollView);
-                if (scrollView != null && dateStripContainer.getChildCount() > todayCardIndex) {
+                if (scrollView != null && dateStripContainer.getChildAt(todayCardIndex) != null) {
                     View targetCard = dateStripContainer.getChildAt(todayCardIndex);
                     int scrollX = targetCard.getLeft() - (scrollView.getWidth() / 2) + (targetCard.getWidth() / 2);
                     scrollView.smoothScrollTo(scrollX, 0);
@@ -752,52 +840,11 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
 
         if (todayCardIndex != -1) {
             HorizontalScrollView scrollView = rootView.findViewById(R.id.dateScrollView);
-            if (scrollView != null && dateStripContainer.getChildCount() > todayCardIndex) {
+            if (scrollView != null && dateStripContainer.getChildAt(todayCardIndex) != null) {
                 View targetCard = dateStripContainer.getChildAt(todayCardIndex);
                 int scrollX = targetCard.getLeft() - (scrollView.getWidth() / 2) + (targetCard.getWidth() / 2);
                 scrollView.smoothScrollTo(scrollX, 0);
             }
-        }
-    }
-
-    private void updateFilterTextView() {
-        String filterText = "All ▼";
-
-        if (!currentStatusFilter.equals("All") && !currentTimeFilter.equals("All")) {
-            filterText = currentStatusFilter + " & " + currentTimeFilter + " ▼";
-        } else if (!currentStatusFilter.equals("All")) {
-            filterText = currentStatusFilter + " ▼";
-        } else if (!currentTimeFilter.equals("All")) {
-            filterText = currentTimeFilter + " ▼";
-        }
-
-        if (tvFilterAll != null) {
-            tvFilterAll.setText(filterText);
-        }
-    }
-
-    private void setupHeader() {
-        if (tvTodayLabel != null) {
-            tvTodayLabel.setText("Today");
-            tvTodayLabel.setOnClickListener(v -> jumpToToday());
-        }
-
-        if (tvFilterAll != null) {
-            updateFilterTextView();
-            tvFilterAll.setOnClickListener(v -> showFilterDialog());
-        }
-    }
-
-    private void animateHeaderEntrance() {
-        if (headerSection != null) {
-            headerSection.setAlpha(0f);
-            headerSection.setTranslationY(-30f);
-            headerSection.animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(500)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .start();
         }
     }
 
@@ -838,6 +885,36 @@ public class Habit_Fragment extends Fragment implements HabitAdapter.OnHabitActi
 
         habitList.addAll(filteredHabits);
         habitAdapter.notifyDataSetChanged();
+
+        // --- FIX 3: Empty State Logic (matching timeline design) ---
+        if (habitList.isEmpty()) {
+            recyclerViewHabits.setVisibility(View.GONE);
+            llEmptyStateContainer.setVisibility(View.VISIBLE);
+            tvSwipeHint.setVisibility(View.GONE);
+
+            // Set the image and message text
+            // Note: ivNoData should be linked to an image resource (like R.drawable.nodata)
+            // if it exists in your project.
+            // ivNoData.setImageResource(R.drawable.nodata);
+            tvEmptyMessage.setText("No Habit Data");
+
+            if (allHabits.isEmpty()) {
+                tvEmptyMessage.setText("No active habits found. Tap '+' to create your first habit!");
+            } else if (!selectedDate.equals(todayDate)) {
+                tvEmptyMessage.setText("No active habits on " + selectedDate + ".");
+            } else if (!currentStatusFilter.equals("All") || !currentTimeFilter.equals("All")) {
+                tvEmptyMessage.setText("No habits match the current filters.");
+            } else {
+                tvEmptyMessage.setText("No Habit Data");
+            }
+
+        } else {
+            recyclerViewHabits.setVisibility(View.VISIBLE);
+            llEmptyStateContainer.setVisibility(View.GONE);
+            tvSwipeHint.setVisibility(View.VISIBLE);
+        }
+        // --- END FIX 3 ---
+
 
         if (layoutManager != null && scrollPosition >= 0 && scrollPosition < habitList.size()) {
             layoutManager.scrollToPositionWithOffset(scrollPosition, offsetTop);

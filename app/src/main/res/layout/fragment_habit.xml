@@ -92,6 +92,20 @@
         app:layout_constraintTop_toBottomOf="@+id/headerSection"
         android:textSize="20sp" />
 
+    <TextView
+        android:id="@+id/tvSwipeHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="28dp"
+        android:text="Swipe left to delete habit"
+        android:textColor="#718096"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerSection"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewHabits"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHabits"
         android:layout_width="0dp"
@@ -106,7 +120,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvYourHabits" />
 
-    <!-- CALENDAR FAB - NOW ON LEFT -->
+    <LinearLayout
+        android:id="@+id/llEmptyStateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvYourHabits"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:padding="32dp">
+
+        <ImageView
+            android:id="@+id/ivNoData"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/nodata"
+            android:contentDescription="No Data Found Illustration"
+            android:layout_marginBottom="32dp"/>
+
+        <TextView
+            android:id="@+id/tvEmptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Habit Data"
+            android:textColor="#2D3748"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCalendar"
         android:layout_width="wrap_content"
@@ -143,7 +186,6 @@
         app:layout_constraintStart_toStartOf="@+id/fabCalendar"
         app:layout_constraintEnd_toEndOf="@+id/fabCalendar" />
 
-    <!-- ADD FAB - NOW ON RIGHT -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"

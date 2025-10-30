@@ -19,15 +19,14 @@
         <FrameLayout
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/circle_bg">
-
-            <TextView
-                android:id="@+id/tvEmojiIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="😞"
-                android:textSize="24sp" />
+            android:background="@drawable/circle_bg"
+            android:backgroundTint="@android:color/white"> <TextView
+            android:id="@+id/tvEmojiIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="😞"
+            android:textSize="24sp" />
         </FrameLayout>
 
         <LinearLayout
@@ -64,7 +63,7 @@
             android:layout_height="32dp"
             android:padding="6dp"
             android:src="@android:drawable/ic_menu_edit"
-            app:tint="#5B5F97"
+            android:tint="#5B5F97"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit Habit" />
     </LinearLayout>

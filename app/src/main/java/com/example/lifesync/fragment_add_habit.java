@@ -1,3 +1,4 @@
+// File: fragment_add_habit.java
 package com.example.lifesync;
 
 import android.app.DatePickerDialog;
@@ -38,11 +39,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-// NOTE: The duplicate inner class definition for HabitSuggestionAdapter has been REMOVED here.
-
 public class fragment_add_habit extends Fragment {
 
-    // Key used to send result back to Habit_Fragment
+    private static final String TAG = "AddHabitFragment";
     private static final String ADD_HABIT_RESULT_KEY = "add_habit_result";
 
     private EditText etHabitName;
@@ -97,7 +96,6 @@ public class fragment_add_habit extends Fragment {
         setupSuggestions();
         setupListeners();
 
-        // Display today's date initially
         tvStartDate.setText(formatDateForDisplay(todayDate));
 
         if (selectedColor.isEmpty()) {
@@ -126,7 +124,6 @@ public class fragment_add_habit extends Fragment {
         Context context = getContext();
         if (context == null) return;
 
-        // Use the proper HabitSuggestionAdapter and its OnHabitClickListener interface
         suggestionAdapter = new HabitSuggestionAdapter(new ArrayList<>(), new HabitSuggestionAdapter.OnHabitClickListener() {
             @Override
             public void onHabitClick(String habitName) {
@@ -219,7 +216,6 @@ public class fragment_add_habit extends Fragment {
 
         Calendar calendar = Calendar.getInstance();
 
-        // Use stored date for initial view
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             if (isStartDate && !startDate.isEmpty()) {
@@ -236,7 +232,6 @@ public class fragment_add_habit extends Fragment {
                     String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
 
                     if (isStartDate) {
-                        // Validate start date against today
                         if (isDateBefore(date, todayDate) && !date.equals(todayDate)) {
                             Toast.makeText(context, "Start date cannot be before today", Toast.LENGTH_LONG).show();
                             return;
@@ -245,13 +240,11 @@ public class fragment_add_habit extends Fragment {
                         startDate = date;
                         tvStartDate.setText(formatDateForDisplay(date));
 
-                        // Auto-correct end date if it precedes new start date
                         if (!endDate.isEmpty() && isDateBefore(endDate, startDate)) {
                             endDate = "";
                             tvEndDate.setText("Select date (No End)");
                         }
                     } else {
-                        // Validate end date against start date
                         if (!startDate.isEmpty() && isDateBefore(date, startDate)) {
                             Toast.makeText(context, "End date cannot be before start date", Toast.LENGTH_LONG).show();
                             return;
@@ -265,26 +258,20 @@ public class fragment_add_habit extends Fragment {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
 
-        // Ensure Start Date picker minimum date is today
         if (isStartDate) {
-            // Set min date to today
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         } else {
-            // Ensure End Date picker minimum date is the Start Date
             if (!startDate.isEmpty()) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     Date startDateObj = sdf.parse(startDate);
                     if (startDateObj != null) {
-                        // Set min date to selected start date
                         datePickerDialog.getDatePicker().setMinDate(startDateObj.getTime());
                     }
                 } catch (ParseException e) {
-                    // Fallback to today if parsing fails
                     datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 }
             } else {
-                // If start date is not set, set min date to today
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             }
         }
@@ -301,7 +288,7 @@ public class fragment_add_habit extends Fragment {
                 return outputFormat.format(date);
             }
         } catch (ParseException e) {
-            Log.e("AddHabit", "Error formatting date: " + e.getMessage());
+            Log.e(TAG, "Error formatting date: " + e.getMessage());
         }
         return dateStr;
     }
@@ -313,7 +300,7 @@ public class fragment_add_habit extends Fragment {
             Date d2 = sdf.parse(date2);
             return d1 != null && d2 != null && d1.before(d2);
         } catch (ParseException e) {
-            Log.e("AddHabit", "Error comparing dates: " + e.getMessage());
+            Log.e(TAG, "Error comparing dates: " + e.getMessage());
             return false;
         }
     }
@@ -333,7 +320,7 @@ public class fragment_add_habit extends Fragment {
         Context context = getContext();
         if (context == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View view = getLayoutInflater().inflate(R.layout.dialog_time_picker_edit, null);
 
         NumberPicker hourPicker = view.findViewById(R.id.hourPicker);
@@ -343,9 +330,28 @@ public class fragment_add_habit extends Fragment {
         Button btnDeleteTime = view.findViewById(R.id.btnDelete);
         ImageView ivClose = view.findViewById(R.id.ivClose);
         TextView tvTitle = view.findViewById(R.id.tvTitle);
+        LinearLayout dialogContainer = view.findViewById(R.id.timePickerDialog);
+
+        if (dialogContainer != null) {
+            dialogContainer.setBackgroundColor(Color.WHITE);
+        }
+
+        int pickerWidth = (int) (80 * getResources().getDisplayMetrics().density);
+        int pickerHeight = (int) (180 * getResources().getDisplayMetrics().density);
+
+        LinearLayout.LayoutParams pickerParams = new LinearLayout.LayoutParams(pickerWidth, pickerHeight);
+        pickerParams.setMargins(4, 0, 4, 0);
+        hourPicker.setLayoutParams(pickerParams);
+        minutePicker.setLayoutParams(pickerParams);
+
+        LinearLayout.LayoutParams periodParams = new LinearLayout.LayoutParams(pickerWidth, pickerHeight);
+        periodParams.setMargins(8, 0, 4, 0);
+        periodPicker.setLayoutParams(periodParams);
 
         hourPicker.setMinValue(1);
         hourPicker.setMaxValue(12);
+        hourPicker.setWrapSelectorWheel(true);
+
         minutePicker.setMinValue(0);
         minutePicker.setMaxValue(59);
         minutePicker.setFormatter(i -> String.format(Locale.getDefault(), "%02d", i));
@@ -354,6 +360,7 @@ public class fragment_add_habit extends Fragment {
         periodPicker.setMinValue(0);
         periodPicker.setMaxValue(1);
         periodPicker.setDisplayedValues(new String[]{"AM", "PM"});
+        periodPicker.setWrapSelectorWheel(false);
 
         if (editIndex >= 0) {
             tvTitle.setText("Edit Time");
@@ -388,6 +395,14 @@ public class fragment_add_habit extends Fragment {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
+        dialog.setOnShowListener(dialogInterface -> {
+            hourPicker.postDelayed(() -> {
+                setNumberPickerTextColorSafe(hourPicker);
+                setNumberPickerTextColorSafe(minutePicker);
+                setNumberPickerTextColorSafe(periodPicker);
+            }, 100);
+        });
+
         btnConfirm.setOnClickListener(v -> {
             int hour = hourPicker.getValue();
             int minute = minutePicker.getValue();
@@ -396,7 +411,6 @@ public class fragment_add_habit extends Fragment {
             String time = String.format(Locale.getDefault(), "%02d:%02d %s",
                     hour, minute, period == 0 ? "AM" : "PM");
 
-            // Check for duplicate time before adding
             if (editIndex < 0 && selectedTimes.contains(time)) {
                 Toast.makeText(context, "This reminder time is already added.", Toast.LENGTH_SHORT).show();
                 return;
@@ -421,6 +435,32 @@ public class fragment_add_habit extends Fragment {
 
         ivClose.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    private void setNumberPickerTextColorSafe(NumberPicker numberPicker) {
+        try {
+            numberPicker.measure(0, 0);
+            setNumberPickerTextColorRecursive(numberPicker);
+            numberPicker.invalidate();
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to set NumberPicker text color: " + e.getMessage());
+        }
+    }
+
+    private void setNumberPickerTextColorRecursive(View view) {
+        if (view instanceof EditText) {
+            EditText editText = (EditText) view;
+            editText.setTextColor(Color.parseColor("#2D3748"));
+            editText.setTextSize(20);
+            return;
+        }
+
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                setNumberPickerTextColorRecursive(viewGroup.getChildAt(i));
+            }
+        }
     }
 
     private void updateTimesDisplay() {
@@ -516,7 +556,6 @@ public class fragment_add_habit extends Fragment {
             return;
         }
 
-        // Mandatory reminder check
         if (selectedTimes.isEmpty()) {
             Toast.makeText(context, "⏰ Please add at least one reminder", Toast.LENGTH_LONG).show();
             return;
@@ -528,7 +567,6 @@ public class fragment_add_habit extends Fragment {
 
         String progressString = String.join(",", selectedTimes);
 
-        // --- Use Fragment Result API to pass data back to Habit_Fragment ---
         Bundle result = new Bundle();
         result.putString("habit_name", habitName);
         result.putString("habit_color", selectedColor);
@@ -536,10 +574,8 @@ public class fragment_add_habit extends Fragment {
         result.putString("habit_end_date", endDate);
         result.putString("habit_progress", progressString);
 
-        // Set the result key used by Habit_Fragment to listen for new data
-        getParentFragmentManager().setFragmentResult(ADD_HABIT_RESULT_KEY, result);
+        getParentFragmentManager().setFragmentResult("add_habit_result", result);
 
-        // After saving, close the fragment (pop it from the back stack)
         if (getParentFragmentManager().getBackStackEntryCount() > 0) {
             getParentFragmentManager().popBackStack();
         }

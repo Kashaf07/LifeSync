@@ -1,3 +1,4 @@
+// File: EditHabitFragment.java
 package com.example.lifesync;
 
 import android.app.DatePickerDialog;
@@ -12,12 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +38,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 
 public class EditHabitFragment extends Fragment {
 
@@ -133,8 +131,6 @@ public class EditHabitFragment extends Fragment {
         btnSave = view.findViewById(R.id.btnSave);
         btnDeleteContainer = view.findViewById(R.id.btnDeleteContainer);
         ivBack = view.findViewById(R.id.ivBack);
-
-        // Required views for reminders and suggestions
         timesContainer = view.findViewById(R.id.timesContainer);
         btnAddTime = view.findViewById(R.id.btnAddTime);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
@@ -156,13 +152,9 @@ public class EditHabitFragment extends Fragment {
         rvHabitSuggestions.setLayoutManager(new LinearLayoutManager(context));
         rvHabitSuggestions.setAdapter(suggestionAdapter);
 
-        // ISSUE FIX 3: Show suggestions when focusing or clearing text
         etHabitName.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus && etHabitName.getText().toString().trim().isEmpty()) {
                 showTopSuggestions();
-            } else if (!hasFocus) {
-                rvHabitSuggestions.setVisibility(View.GONE);
-                tvSuggestionsHeader.setVisibility(View.GONE);
             }
         });
 
@@ -176,7 +168,14 @@ public class EditHabitFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().isEmpty()) {
+                    showTopSuggestions();
+                } else if (rvHabitSuggestions.getVisibility() == View.VISIBLE && suggestionAdapter.getItemCount() == 0) {
+                    rvHabitSuggestions.setVisibility(View.GONE);
+                    tvSuggestionsHeader.setVisibility(View.GONE);
+                }
+            }
         });
     }
 
@@ -219,7 +218,6 @@ public class EditHabitFragment extends Fragment {
             etHabitName.setText(habit.getName());
             selectedColor = habit.getColor();
 
-            // ISSUE FIX 2: Correctly load dates and display
             startDateStr = habit.getDate() != null && !habit.getDate().isEmpty() ? habit.getDate() : todayDate;
             tvStartDate.setText(formatDateForDisplay(startDateStr));
 
@@ -232,11 +230,9 @@ public class EditHabitFragment extends Fragment {
 
             setInitialColor(selectedColor);
 
-            // ISSUE FIX 1: Load and display reminder times
             selectedTimes.clear();
             String progress = habit.getProgress();
             if (progress != null && !progress.trim().isEmpty()) {
-                // Split and trim each time, then add
                 String[] times = progress.split(",");
                 for (String time : times) {
                     selectedTimes.add(time.trim());
@@ -250,7 +246,7 @@ public class EditHabitFragment extends Fragment {
     }
 
     private void setInitialColor(String color) {
-        int checkedId = R.id.rbBlue; // Default
+        int checkedId = R.id.rbBlue;
         if ("#C9E4DE".equals(color)) checkedId = R.id.rbGreen;
         else if ("#FFE5D9".equals(color)) checkedId = R.id.rbPeach;
         else if ("#E6E6FA".equals(color)) checkedId = R.id.rbLavender;
@@ -283,7 +279,6 @@ public class EditHabitFragment extends Fragment {
     private void showDatePicker(boolean isStartDate) {
         final Calendar calendar = Calendar.getInstance();
 
-        // Use current stored date for picker if available
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             if (isStartDate && !startDateStr.isEmpty()) {
@@ -297,11 +292,10 @@ public class EditHabitFragment extends Fragment {
 
         DatePickerDialog datePicker = new DatePickerDialog(
                 requireContext(),
-                (DatePicker view, int y, int m, int d) -> {
+                (view, y, m, d) -> {
                     String dateStr = String.format(Locale.getDefault(), "%04d-%02d-%02d", y, m + 1, d);
 
                     if (isStartDate) {
-                        // ISSUE FIX 2: Validate against today
                         if (isDateBefore(dateStr, todayDate) && !dateStr.equals(todayDate)) {
                             Toast.makeText(requireContext(), "Start date cannot be before today", Toast.LENGTH_LONG).show();
                             return;
@@ -310,13 +304,11 @@ public class EditHabitFragment extends Fragment {
                         startDateStr = dateStr;
                         tvStartDate.setText(formatDateForDisplay(dateStr));
 
-                        // Auto-correct end date if it precedes new start date
                         if (!endDateStr.isEmpty() && isDateBefore(endDateStr, startDateStr)) {
                             endDateStr = "";
                             tvEndDate.setText("Select date (No End)");
                         }
                     } else {
-                        // Validate end date against start date
                         if (!startDateStr.isEmpty() && isDateBefore(dateStr, startDateStr)) {
                             Toast.makeText(requireContext(), "End date cannot be before start date", Toast.LENGTH_LONG).show();
                             return;
@@ -330,12 +322,9 @@ public class EditHabitFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
 
-        // ISSUE FIX 2: Enforce constraints on the picker itself
         if (isStartDate) {
-            // Cannot select a past date
             datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         } else {
-            // Cannot select a date before the start date
             if (!startDateStr.isEmpty()) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -347,7 +336,6 @@ public class EditHabitFragment extends Fragment {
                     datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 }
             } else {
-                // If start date is somehow unset, restrict to today
                 datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             }
         }
@@ -407,7 +395,7 @@ public class EditHabitFragment extends Fragment {
         Context context = getContext();
         if (context == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         View view = getLayoutInflater().inflate(R.layout.dialog_time_picker_edit, null);
 
         NumberPicker hourPicker = view.findViewById(R.id.hourPicker);
@@ -417,9 +405,28 @@ public class EditHabitFragment extends Fragment {
         Button btnDeleteTime = view.findViewById(R.id.btnDelete);
         ImageView ivClose = view.findViewById(R.id.ivClose);
         TextView tvTitle = view.findViewById(R.id.tvTitle);
+        LinearLayout dialogContainer = view.findViewById(R.id.timePickerDialog);
+
+        if (dialogContainer != null) {
+            dialogContainer.setBackgroundColor(Color.WHITE);
+        }
+
+        int pickerWidth = (int) (80 * getResources().getDisplayMetrics().density);
+        int pickerHeight = (int) (180 * getResources().getDisplayMetrics().density);
+
+        LinearLayout.LayoutParams pickerParams = new LinearLayout.LayoutParams(pickerWidth, pickerHeight);
+        pickerParams.setMargins(4, 0, 4, 0);
+        hourPicker.setLayoutParams(pickerParams);
+        minutePicker.setLayoutParams(pickerParams);
+
+        LinearLayout.LayoutParams periodParams = new LinearLayout.LayoutParams(pickerWidth, pickerHeight);
+        periodParams.setMargins(8, 0, 4, 0);
+        periodPicker.setLayoutParams(periodParams);
 
         hourPicker.setMinValue(1);
         hourPicker.setMaxValue(12);
+        hourPicker.setWrapSelectorWheel(true);
+
         minutePicker.setMinValue(0);
         minutePicker.setMaxValue(59);
         minutePicker.setFormatter(i -> String.format(Locale.getDefault(), "%02d", i));
@@ -428,6 +435,7 @@ public class EditHabitFragment extends Fragment {
         periodPicker.setMinValue(0);
         periodPicker.setMaxValue(1);
         periodPicker.setDisplayedValues(new String[]{"AM", "PM"});
+        periodPicker.setWrapSelectorWheel(false);
 
         if (editIndex >= 0) {
             tvTitle.setText("Edit Time");
@@ -462,6 +470,14 @@ public class EditHabitFragment extends Fragment {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
+        dialog.setOnShowListener(dialogInterface -> {
+            hourPicker.postDelayed(() -> {
+                setNumberPickerTextColorSafe(hourPicker);
+                setNumberPickerTextColorSafe(minutePicker);
+                setNumberPickerTextColorSafe(periodPicker);
+            }, 100);
+        });
+
         btnConfirm.setOnClickListener(v -> {
             int hour = hourPicker.getValue();
             int minute = minutePicker.getValue();
@@ -494,6 +510,32 @@ public class EditHabitFragment extends Fragment {
 
         ivClose.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
+    }
+
+    private void setNumberPickerTextColorSafe(NumberPicker numberPicker) {
+        try {
+            numberPicker.measure(0, 0);
+            setNumberPickerTextColorRecursive(numberPicker);
+            numberPicker.invalidate();
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to set NumberPicker text color: " + e.getMessage());
+        }
+    }
+
+    private void setNumberPickerTextColorRecursive(View view) {
+        if (view instanceof EditText) {
+            EditText editText = (EditText) view;
+            editText.setTextColor(Color.parseColor("#2D3748"));
+            editText.setTextSize(20);
+            return;
+        }
+
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                setNumberPickerTextColorRecursive(viewGroup.getChildAt(i));
+            }
+        }
     }
 
     private void updateTimesDisplay() {
@@ -533,7 +575,6 @@ public class EditHabitFragment extends Fragment {
             badgeParams.setMargins(0, 0, 16, 8);
 
             timeBadge.setLayoutParams(badgeParams);
-            // Use the same accent color for consistency
             timeBadge.setCardBackgroundColor(Color.parseColor("#EDACAC"));
 
             TextView tvTime = new TextView(context);
@@ -574,24 +615,20 @@ public class EditHabitFragment extends Fragment {
 
         String progressString = String.join(",", selectedTimes);
 
-        // 1. Cancel old reminders
         Habit oldHabit = databaseHelper.getHabitById(habitId);
         if (oldHabit != null && oldHabit.getProgress() != null) {
             notificationHelper.cancelHabitReminders(habitId, oldHabit.getProgress());
         }
 
-        // 2. Update DB
         Habit habit = new Habit(habitId, habitName, false, selectedColor, progressString, startDateStr, endDateStr);
         databaseHelper.updateHabit(habit);
 
-        // 3. Schedule new reminders
         if (!progressString.isEmpty()) {
             notificationHelper.scheduleHabitReminders(habitId, habitName, progressString);
         }
 
         Toast.makeText(requireContext(), "Habit updated! ✅", Toast.LENGTH_SHORT).show();
 
-        // Navigate back
         if (getParentFragmentManager().getBackStackEntryCount() > 0) {
             getParentFragmentManager().popBackStack();
         }
@@ -607,18 +644,15 @@ public class EditHabitFragment extends Fragment {
     }
 
     private void deleteHabit() {
-        // Cancel reminders
         Habit habit = databaseHelper.getHabitById(habitId);
         if (habit != null && habit.getProgress() != null) {
             notificationHelper.cancelHabitReminders(habitId, habit.getProgress());
         }
 
-        // Delete from DB
         databaseHelper.deleteHabit(habitId);
 
         Toast.makeText(requireContext(), "Habit deleted! 🗑️", Toast.LENGTH_SHORT).show();
 
-        // Navigate back
         if (getParentFragmentManager().getBackStackEntryCount() > 0) {
             getParentFragmentManager().popBackStack();
         }

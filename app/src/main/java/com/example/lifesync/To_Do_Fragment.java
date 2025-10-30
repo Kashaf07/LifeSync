@@ -43,6 +43,10 @@ import androidx.core.content.ContextCompat;
 
 public class To_Do_Fragment extends Fragment {
 
+    // --- NEW STATIC KEY for Dashboard integration ---
+    public static final String ARG_SHOW_ADD_DIALOG = "show_add_dialog";
+    // ----------------------
+
     private RecyclerView recyclerView;
     private FloatingActionButton fabAddTask;
     private ToDoAdapter adapter;
@@ -82,6 +86,13 @@ public class To_Do_Fragment extends Fragment {
         loadTasks();
 
         fabAddTask.setOnClickListener(v -> showAddTaskDialog());
+
+        // --- NEW LOGIC TO SHOW DIALOG IMMEDIATELY for Quick Action ---
+        if (getArguments() != null && getArguments().getBoolean(ARG_SHOW_ADD_DIALOG, false)) {
+            // Post the action to ensure the fragment view is fully set up and ready
+            view.post(this::showAddTaskDialog);
+        }
+        // ---------------------------------------------
 
         return view;
     }
