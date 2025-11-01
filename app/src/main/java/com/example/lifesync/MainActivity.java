@@ -1,9 +1,11 @@
 package com.example.lifesync;
 
 import android.content.Intent; // --- ADDED IMPORT ---
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import androidx.annotation.Nullable; // --- ADDED IMPORT ---
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -64,11 +66,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (selectedFragment != null) {
                 loadFragment(selectedFragment);
+                updateNavigationColors(id);
                 return true;
             }
             return false;
         });
     }
+
 
     private void setStatusBarColor(int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -145,6 +149,26 @@ public class MainActivity extends AppCompatActivity {
             // The super.onActivityResult(...) call above should be enough,
             // but if not, you can explicitly pass it.
             // ((FragmentAddJournal) fragment).onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    private void updateNavigationColors(int selectedItemId) {
+        ColorStateList colorStateList = null;
+
+        if (selectedItemId == R.id.nav_dashboard) {
+            colorStateList = ContextCompat.getColorStateList(this, R.color.nav_dashboard_color);
+        } else if (selectedItemId == R.id.nav_todo) {
+            colorStateList = ContextCompat.getColorStateList(this, R.color.nav_todo_color);
+        } else if (selectedItemId == R.id.nav_habits) {
+            colorStateList = ContextCompat.getColorStateList(this, R.color.nav_habits_color);
+        } else if (selectedItemId == R.id.nav_expense) {
+            colorStateList = ContextCompat.getColorStateList(this, R.color.nav_expense_color);
+        } else if (selectedItemId == R.id.nav_journal) {
+            colorStateList = ContextCompat.getColorStateList(this, R.color.nav_journal_color);
+        }
+
+        if (colorStateList != null) {
+            bottomNavigationView.setItemIconTintList(colorStateList);
+            bottomNavigationView.setItemTextColor(colorStateList);
         }
     }
 }

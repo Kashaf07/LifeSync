@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#FAF9FC"
     android:fillViewport="true"
     android:overScrollMode="never">
 
@@ -84,6 +84,7 @@
                         android:alignmentMode="alignMargins"
                         android:columnOrderPreserved="false">
 
+                        <!-- To Do Card - Pastel Pink -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardToDo"
                             android:layout_width="0dp"
@@ -94,7 +95,7 @@
                             android:layout_margin="8dp"
                             app:cardCornerRadius="16dp"
                             app:cardElevation="0dp"
-                            app:cardBackgroundColor="#F8F9FF"
+                            app:cardBackgroundColor="#FAEEF0"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground">
@@ -109,13 +110,13 @@
                                 <TextView
                                     android:layout_width="55dp"
                                     android:layout_height="55dp"
-                                    android:text="✓"
-                                    android:textSize="26sp"
-                                    android:textColor="#6366F1"
-                                    android:gravity="center"
+                                    android:layout_marginBottom="5dp"
                                     android:background="@drawable/circle_bg"
-                                    android:backgroundTint="#E0E7FF"
-                                    android:layout_marginBottom="10dp" />
+                                    android:backgroundTint="#FFCCD5"
+                                    android:gravity="center"
+                                    android:text="✓"
+                                    android:textColor="#F65B90"
+                                    android:textSize="26sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -136,6 +137,7 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
+                        <!-- Journal Card - Sky Blue -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardJournal"
                             android:layout_width="0dp"
@@ -146,7 +148,7 @@
                             android:layout_margin="8dp"
                             app:cardCornerRadius="16dp"
                             app:cardElevation="0dp"
-                            app:cardBackgroundColor="#FFF5F7"
+                            app:cardBackgroundColor="#E0F2FE"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground">
@@ -161,12 +163,12 @@
                                 <TextView
                                     android:layout_width="55dp"
                                     android:layout_height="55dp"
-                                    android:text="📖"
-                                    android:textSize="24sp"
-                                    android:gravity="center"
+                                    android:layout_marginBottom="5dp"
                                     android:background="@drawable/circle_bg"
-                                    android:backgroundTint="#FCE7F3"
-                                    android:layout_marginBottom="10dp" />
+                                    android:backgroundTint="#BAE6FD"
+                                    android:gravity="center"
+                                    android:text="📖"
+                                    android:textSize="24sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -187,6 +189,7 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
+                        <!-- Habits Card - Teal and Cream -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardHabits"
                             android:layout_width="0dp"
@@ -197,7 +200,7 @@
                             android:layout_margin="8dp"
                             app:cardCornerRadius="16dp"
                             app:cardElevation="0dp"
-                            app:cardBackgroundColor="#F0FDF4"
+                            app:cardBackgroundColor="#CCFBF1"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground">
@@ -212,12 +215,12 @@
                                 <TextView
                                     android:layout_width="55dp"
                                     android:layout_height="55dp"
-                                    android:text="🔄"
-                                    android:textSize="24sp"
-                                    android:gravity="center"
+                                    android:layout_marginBottom="5dp"
                                     android:background="@drawable/circle_bg"
-                                    android:backgroundTint="#DCFCE7"
-                                    android:layout_marginBottom="10dp" />
+                                    android:backgroundTint="#AFF2EF"
+                                    android:gravity="center"
+                                    android:text="🔄"
+                                    android:textSize="24sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -238,6 +241,7 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
+                        <!-- Expense Card - Pastel Green -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardExpense"
                             android:layout_width="0dp"
@@ -248,7 +252,7 @@
                             android:layout_margin="8dp"
                             app:cardCornerRadius="16dp"
                             app:cardElevation="0dp"
-                            app:cardBackgroundColor="#FFFBEB"
+                            app:cardBackgroundColor="#D1FAE5"
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground">
@@ -263,12 +267,21 @@
                                 <TextView
                                     android:layout_width="55dp"
                                     android:layout_height="55dp"
-                                    android:text="💰"
-                                    android:textSize="24sp"
-                                    android:gravity="center"
+                                    android:layout_marginBottom="5dp"
                                     android:background="@drawable/circle_bg"
-                                    android:backgroundTint="#FEF3C7"
-                                    android:layout_marginBottom="10dp" />
+                                    android:backgroundTint="#A7F3D0"
+                                    android:gravity="center"
+                                    android:text="💰"
+                                    android:textSize="24sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Expense"
+                                    android:textColor="#1F2937"
+                                    android:textSize="17sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginBottom="4dp" />
 
                                 <TextView
                                     android:id="@+id/tvExpenseInfo"
@@ -303,6 +316,7 @@
                 android:columnOrderPreserved="false"
                 android:layout_marginBottom="24dp">
 
+                <!-- Quick Add Todo - Pastel Pink -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuickAddTodo"
                     android:layout_width="0dp"
@@ -338,13 +352,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:text="Add To Do"
+                            android:text="Add Task"
                             android:textColor="#333333"
                             android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Quick Add Habit - Teal and Cream -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuickAddHabit"
                     android:layout_width="0dp"
@@ -387,6 +402,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Quick Add Expense - Pastel Green -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuickAddExpense"
                     android:layout_width="0dp"
@@ -429,6 +445,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- Quick Add Journal - Sky Blue -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardQuickAddJournal"
                     android:layout_width="0dp"
@@ -439,7 +456,7 @@
                     android:layout_margin="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
-                    app:cardBackgroundColor="#E6E6FA"
+                    app:cardBackgroundColor="#BAE6FD"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground">
@@ -458,7 +475,7 @@
                             android:textSize="20sp"
                             android:gravity="center"
                             android:background="@drawable/circle_bg"
-                            android:backgroundTint="#D9D9FF" />
+                            android:backgroundTint="#7DD3FC" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -482,6 +499,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp" />
 
+            <!-- To Do Progress - Pastel Pink -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -507,10 +525,10 @@
                             android:layout_height="40dp"
                             android:text="✓"
                             android:textSize="18sp"
-                            android:textColor="#6366F1"
+                            android:textColor="#E91E63"
                             android:gravity="center"
                             android:background="@drawable/circle_bg"
-                            android:backgroundTint="#E0E7FF" />
+                            android:backgroundTint="#FFCCD5" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -542,7 +560,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="40%"
-                            android:textColor="#6366F1"
+                            android:textColor="#E91E63"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_vertical" />
@@ -554,12 +572,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:progress="40"
-                        android:progressTint="#6366F1"
-                        android:progressBackgroundTint="#E0E7FF" />
+                        android:progressTint="#E91E63"
+                        android:progressBackgroundTint="#FFCCD5" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-
+            <!-- Journal Progress - Sky Blue -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -587,7 +605,7 @@
                             android:textSize="16sp"
                             android:gravity="center"
                             android:background="@drawable/circle_bg"
-                            android:backgroundTint="#FCE7F3" />
+                            android:backgroundTint="#BAE6FD" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -619,7 +637,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="50%"
-                            android:textColor="#EC4899"
+                            android:textColor="#0EA5E9"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_vertical" />
@@ -631,11 +649,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:progress="50"
-                        android:progressTint="#EC4899"
-                        android:progressBackgroundTint="#FCE7F3" />
+                        android:progressTint="#0EA5E9"
+                        android:progressBackgroundTint="#BAE6FD" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Habit Progress - Teal -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -663,7 +682,7 @@
                             android:textSize="16sp"
                             android:gravity="center"
                             android:background="@drawable/circle_bg"
-                            android:backgroundTint="#DCFCE7" />
+                            android:backgroundTint="#99F6E4" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -695,7 +714,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="75%"
-                            android:textColor="#22C55E"
+                            android:textColor="#14B8A6"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_vertical" />
@@ -707,11 +726,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:progress="75"
-                        android:progressTint="#22C55E"
-                        android:progressBackgroundTint="#DCFCE7" />
+                        android:progressTint="#14B8A6"
+                        android:progressBackgroundTint="#99F6E4" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Expense Progress - Pastel Green -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -739,7 +759,7 @@
                             android:textSize="16sp"
                             android:gravity="center"
                             android:background="@drawable/circle_bg"
-                            android:backgroundTint="#FEF3C7" />
+                            android:backgroundTint="#A7F3D0" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -771,7 +791,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="25%"
-                            android:textColor="#F59E0B"
+                            android:textColor="#10B981"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_gravity="center_vertical" />
@@ -783,8 +803,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:progress="25"
-                        android:progressTint="#F59E0B"
-                        android:progressBackgroundTint="#FEF3C7" />
+                        android:progressTint="#10B981"
+                        android:progressBackgroundTint="#A7F3D0" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

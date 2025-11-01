@@ -5,12 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:background="@android:color/white"
-    android:fitsSystemWindows="true"
     app:menu="@menu/menu_bottom_nav"
     app:itemIconTint="@color/bottom_nav_selector"
     app:itemTextColor="@color/bottom_nav_selector"
     app:labelVisibilityMode="labeled"
     app:itemRippleColor="@color/purple_200"
     app:itemBackground="@drawable/nav_item_bg"
-    android:elevation="10dp"
-    />
+    android:elevation="10dp" />
